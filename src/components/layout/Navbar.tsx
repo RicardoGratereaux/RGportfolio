@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { Menu, X } from "lucide-react";
 
+import LiquidGlass from "@/components/ui/LiquidGlass";
+
 const navLinks = [
   { label: "Sobre Mí", href: "#about" },
   { label: "Stack", href: "#stack" },
@@ -25,20 +27,33 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Progress bar */}
-      <ScrollProgress />
-
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "bg-zinc-950/80 backdrop-blur-xl border-b border-white/[0.04] shadow-lg"
-            : "bg-transparent"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500`}
       >
-        <nav className="container mx-auto px-6 h-16 flex items-center justify-between">
+        <AnimatePresence>
+          {scrolled && (
+            <motion.div
+              initial={{ y: "-100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "-100%" }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute inset-0 pointer-events-none"
+            >
+              <LiquidGlass 
+                className="border-x-0 border-t-0" 
+                distortionScale={120} 
+                edgeMask="linear-gradient(to bottom, transparent 15%, black 85%)" 
+                noShadow 
+                filterX="0" 
+                filterWidth="100%" 
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <nav className="relative z-10 container mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="text-lg font-bold tracking-tight text-white group">
             <span className="text-primary">R</span>
@@ -64,8 +79,9 @@ export default function Navbar() {
             <MagneticButton>
               <a
                 href="#contact"
-                className="px-5 py-2 text-sm font-medium bg-primary/10 text-primary border border-primary/20 rounded-full hover:bg-primary/20 transition-all"
+                className="relative isolate overflow-hidden group px-6 py-2.5 text-sm font-medium text-white rounded-full hover:scale-105 transition-all flex items-center justify-center"
               >
+                <LiquidGlass className="z-[-1] rounded-full" distortionScale={30} />
                 Hablemos
               </a>
             </MagneticButton>
@@ -89,8 +105,9 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 bg-zinc-950/98 backdrop-blur-2xl flex flex-col items-center justify-center gap-8 md:hidden"
+            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 md:hidden"
           >
+            <LiquidGlass className="z-[-1]" distortionScale={80} />
             {navLinks.map((link, i) => (
               <motion.a
                 key={link.href}
@@ -111,25 +128,4 @@ export default function Navbar() {
   );
 }
 
-function ScrollProgress() {
-  const [progress, setProgress] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(total > 0 ? (window.scrollY / total) * 100 : 0);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  return (
-    <div className="fixed top-0 left-0 right-0 z-[60] h-[2px]">
-      <motion.div
-        className="h-full bg-gradient-to-r from-primary to-violet-400"
-        style={{ width: `${progress}%` }}
-        transition={{ duration: 0.1 }}
-      />
-    </div>
-  );
-}

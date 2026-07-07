@@ -4,8 +4,10 @@ import { useViewStore } from "@/store/useViewStore";
 import { FadeIn } from "@/components/animations/Reveal";
 import MagneticButton from "@/components/ui/MagneticButton";
 import SpotlightCard from "@/components/ui/SpotlightCard";
-import { techIconMap, NextjsIcon, ReactIcon, TypeScriptIcon, TailwindIcon, PrismaIcon, PostgreSQLIcon, StripeIcon, ZodIcon } from "@/components/icons/TechIcons";
-import { ExternalLink, Code2, Database, LayoutTemplate, Shield, ShoppingCart, CreditCard, BarChart3, Layers, Server, Palette, Search } from "lucide-react";
+import { NextjsIcon, ReactIcon, TypeScriptIcon, TailwindIcon, PrismaIcon, PostgreSQLIcon, StripeIcon, ZodIcon } from "@/components/icons/TechIcons";
+import { ExternalLink, ArrowRight, Code2, Database, LayoutTemplate, Shield, ShoppingCart, CreditCard, BarChart3, Layers, Search } from "lucide-react";
+import LiquidGlass from "@/components/ui/LiquidGlass";
+import GlassButton from "@/components/ui/GlassButton";
 import { motion } from "framer-motion";
 
 const projectTechs = [
@@ -33,16 +35,16 @@ export default function FeaturedProject() {
   const isDeveloper = viewMode === "developer";
 
   return (
-    <section id="projects" className="py-32 relative w-full">
+    <section id="projects" className="py-20 md:py-32 relative w-full">
       <div className="absolute top-1/3 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="container mx-auto px-6">
         <FadeIn>
-          <div className="flex items-center gap-6 mb-16">
+          <div className="flex items-center gap-6 mb-10 md:mb-16">
             <div>
               <p className="text-primary font-mono text-sm mb-3 tracking-wider uppercase">Case Study</p>
               <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
-                Proyecto <span className="bg-gradient-to-r from-primary to-violet-400 bg-clip-text text-transparent">Destacado</span>
+                Proyecto <span className={isDeveloper ? "bg-gradient-to-r from-primary to-violet-400 bg-clip-text text-transparent" : "bg-gradient-to-r from-primary to-sky-400 bg-clip-text text-transparent"}>Destacado</span>
               </h2>
             </div>
             <div className="h-px bg-gradient-to-r from-white/10 to-transparent flex-1 ml-4 hidden md:block" />
@@ -63,7 +65,7 @@ export default function FeaturedProject() {
                 </div>
 
                 <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                  Plataforma Ecommerce
+                  Gold Ocean Lures
                 </h3>
 
                 <p className="text-zinc-400 leading-relaxed mb-8">
@@ -86,12 +88,9 @@ export default function FeaturedProject() {
                 </div>
 
                 <div className="flex items-center gap-6">
-                  <MagneticButton>
-                    <a href="#" className="group flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-all text-sm shadow-[0_0_20px_rgba(124,58,237,0.3)]">
-                      <Code2 className="w-4 h-4" />
-                      Ver Código
-                    </a>
-                  </MagneticButton>
+                  <GlassButton href="#">
+                    Ver Más
+                  </GlassButton>
                   <MagneticButton>
                     <a href="#" className="group flex items-center gap-2 text-zinc-400 hover:text-white transition-colors text-sm font-medium">
                       <ExternalLink className="w-4 h-4" />

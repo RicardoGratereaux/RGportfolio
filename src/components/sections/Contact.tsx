@@ -2,20 +2,23 @@
 
 import { FadeIn } from "@/components/animations/Reveal";
 import MagneticButton from "@/components/ui/MagneticButton";
+import LiquidGlass from "@/components/ui/LiquidGlass";
+import GlassButton from "@/components/ui/GlassButton";
 import { Send, Mail, MapPin, ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Contact() {
+  const isDeveloper = true;
   return (
-    <section id="contact" className="py-32 relative w-full">
+    <section id="contact" className="py-20 md:py-32 relative w-full">
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="container mx-auto px-6">
         <FadeIn>
-          <div className="text-center mb-20">
+          <div className="text-center mb-12 md:mb-20">
             <p className="text-primary font-mono text-sm mb-3 tracking-wider uppercase">Contacto</p>
             <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-              Ponte en <span className="bg-gradient-to-r from-primary to-violet-400 bg-clip-text text-transparent">Contacto</span>
+              Ponte en <span className={isDeveloper ? "bg-gradient-to-r from-primary to-violet-400 bg-clip-text text-transparent" : "bg-gradient-to-r from-primary to-sky-400 bg-clip-text text-transparent"}>Contacto</span>
             </h2>
             <p className="text-zinc-400 max-w-xl mx-auto leading-relaxed">
               ¿Tienes un proyecto en mente o buscas un desarrollador Full Stack para tu equipo?
@@ -30,7 +33,7 @@ export default function Contact() {
             <motion.a
               href="mailto:hello@example.com"
               whileHover={{ scale: 1.02 }}
-              className="glass-panel p-6 rounded-2xl flex items-start gap-4 group hover:border-primary/30 transition-all block"
+              className="glass-panel p-6 rounded-2xl flex items-start gap-4 group hover:border-primary/30 transition-all"
             >
               <div className="p-3 bg-primary/10 text-primary rounded-xl group-hover:bg-primary/20 transition-colors">
                 <Mail className="w-5 h-5" />
@@ -101,12 +104,10 @@ export default function Contact() {
                 />
               </div>
 
-              <MagneticButton className="w-full">
-                <button className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-all shadow-[0_0_30px_rgba(124,58,237,0.3)] group">
-                  Enviar Mensaje
-                  <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform" />
-                </button>
-              </MagneticButton>
+              <GlassButton wrapperClassName="w-full" className="w-full">
+                <span>Enviar Mensaje</span>
+                <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              </GlassButton>
             </form>
           </FadeIn>
         </div>

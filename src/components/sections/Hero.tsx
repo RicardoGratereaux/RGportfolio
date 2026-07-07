@@ -1,53 +1,162 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
+import { motion, useMotionValue, useSpring, useTransform, useScroll, useAnimationFrame } from "framer-motion";
+
 import { useViewStore } from "@/store/useViewStore";
 import { FadeIn, TextReveal } from "@/components/animations/Reveal";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { ArrowRight, Download } from "lucide-react";
 import { GitHubIcon, LinkedInIcon, heroTechItems } from "@/components/icons/TechIcons";
-import { motion } from "framer-motion";
+import GlassButton from "@/components/ui/GlassButton";
+import { TypeAnimation } from 'react-type-animation';
+
+function FloatingTechItem({
+  tech,
+  i,
+  smoothX,
+  smoothY,
+  mousePixelX,
+  mousePixelY,
+}: {
+  tech: any;
+  i: number;
+  smoothX: any;
+  smoothY: any;
+  mousePixelX: any;
+  mousePixelY: any;
+  total: number;
+}) {
+  const random = (seed: number) => {
+    const x = Math.sin(seed + 1) * 10000;
+    return x - Math.floor(x);
+  };
+
+  let startX = random(i) * 100;
+  let startY = random(i + 100) * 100;
+  
+  // Allow them slightly closer to center
+  if (startX > 35 && startX < 65 && startY > 35 && startY < 65) {
+    startX = startX < 50 ? startX - 20 : startX + 20;
+    startY = startY < 50 ? startY - 20 : startY + 20;
+  }
+
+  const duration = 10 + random(i + 200) * 15;
+  const floatX = (random(i + 300) - 0.5) * 180;
+  const floatY = (random(i + 400) - 0.5) * 180;
+  const delay = random(i + 500) * 5;
+
+  const parallaxFactor = 20 + random(i + 600) * 40;
+  const parallaxX = useTransform(smoothX, (v: number) => v * parallaxFactor);
+  const parallaxY = useTransform(smoothY, (v: number) => v * parallaxFactor);
+
+  const size = 24 + random(i + 700) * 32;
+  const opacity = 0.4 + random(i + 800) * 0.4; // Increased visibility
+
+  const ref = useRef<HTMLDivElement>(null);
+  const repulseX = useSpring(0, { damping: 25, stiffness: 90, mass: 1.2 });
+  const repulseY = useSpring(0, { damping: 25, stiffness: 90, mass: 1.2 });
+
+  useAnimationFrame(() => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    const mx = mousePixelX.get();
+    const my = mousePixelY.get();
+
+    const dx = centerX - mx;
+    const dy = centerY - my;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const maxDistance = 600;
+
+    if (distance < maxDistance && distance > 0) {
+      const force = (maxDistance - distance) / maxDistance;
+      repulseX.set((dx / distance) * force * 290); 
+      repulseY.set((dy / distance) * force * 290);
+    } else {
+      repulseX.set(0);
+      repulseY.set(0);
+    }
+  });
+
+  return (
+    <motion.div
+      className="absolute flex items-center justify-center pointer-events-none"
+      style={{
+        left: `${startX}%`,
+        top: `${startY}%`,
+      }}
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: [opacity * 0.7, opacity, opacity * 0.7],
+        x: [0, floatX, 0],
+        y: [0, floatY, 0],
+      }}
+      transition={{
+        duration,
+        repeat: Infinity,
+        delay,
+        ease: "easeInOut",
+      }}
+    >
+      <motion.div style={{ x: parallaxX, y: parallaxY }}>
+        <motion.div
+          ref={ref}
+          style={{ width: size, height: size, x: repulseX, y: repulseY }}
+          className="rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md flex items-center justify-center"
+        >
+          <tech.Icon className="w-1/2 h-1/2 opacity-70" />
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 function FloatingTechOrbit() {
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {heroTechItems.map((tech, i) => {
-        const total = heroTechItems.length;
-        const angle = (i / total) * 360;
-        const radius = 38 + (i % 3) * 8;
-        const duration = 45 + (i % 5) * 10;
-        const delay = i * 0.15;
-        const x = 50 + radius * Math.cos((angle * Math.PI) / 180);
-        const y = 50 + radius * Math.sin((angle * Math.PI) / 180);
+  const [mounted, setMounted] = useState(false);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const mousePixelX = useMotionValue(-1000);
+  const mousePixelY = useMotionValue(-1000);
 
-        return (
-          <motion.div
-            key={tech.name}
-            className="absolute flex items-center justify-center"
-            style={{
-              left: `${x}%`,
-              top: `${y}%`,
-              transform: "translate(-50%, -50%)",
-            }}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: [0, 0.5, 0.3, 0.5, 0],
-              scale: [0.6, 1, 0.8, 1, 0.6],
-              x: [0, 30 * Math.cos(angle), -20, 15 * Math.sin(angle), 0],
-              y: [0, -25 * Math.sin(angle), 20, -10 * Math.cos(angle), 0],
-            }}
-            transition={{
-              duration,
-              repeat: Infinity,
-              delay,
-              ease: "linear",
-            }}
-          >
-            <div className="p-3 rounded-2xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-sm group hover:bg-white/[0.06] transition-all">
-              <tech.Icon className="w-6 h-6 md:w-8 md:h-8 opacity-40" />
-            </div>
-          </motion.div>
-        );
-      })}
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const nx = (e.clientX / window.innerWidth) * 2 - 1;
+      const ny = (e.clientY / window.innerHeight) * 2 - 1;
+      mouseX.set(nx);
+      mouseY.set(ny);
+      
+      mousePixelX.set(e.clientX);
+      mousePixelY.set(e.clientY);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    setMounted(true);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY, mousePixelX, mousePixelY]);
+
+  const smoothX = useSpring(mouseX, { damping: 20, stiffness: 300 });
+  const smoothY = useSpring(mouseY, { damping: 20, stiffness: 300 });
+
+  if (!mounted) return null;
+
+  const extendedTechItems = [...heroTechItems, ...heroTechItems, ...heroTechItems];
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      {extendedTechItems.map((tech, i) => (
+        <FloatingTechItem
+          key={`${tech.name}-${i}`}
+          tech={tech}
+          i={i}
+          smoothX={smoothX}
+          smoothY={smoothY}
+          mousePixelX={mousePixelX}
+          mousePixelY={mousePixelY}
+          total={extendedTechItems.length}
+        />
+      ))}
     </div>
   );
 }
@@ -55,50 +164,70 @@ function FloatingTechOrbit() {
 export default function Hero() {
   const { viewMode } = useViewStore();
   const isDeveloper = viewMode === "developer";
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
+  const y2 = useTransform(scrollY, [0, 1000], [0, -150]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden w-full">
-      {/* Background Effects */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-violet-600/10 rounded-full blur-[100px] pointer-events-none" />
-
-      {/* Grid pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.02]"
+      {/* Background Wrapper with Fade-Out at Bottom */}
+      <div 
+        className="absolute inset-0 z-0 pointer-events-none"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
+          maskImage: 'linear-gradient(to bottom, black 0%, black 20%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 20%, transparent 100%)'
         }}
-      />
+      >
+        {/* Background Effects */}
+        <motion.div style={{ y: y1 }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px]" />
+        <motion.div style={{ y: y2 }} className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[120px]" />
+        <motion.div style={{ y: y1 }} className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-violet-600/10 rounded-full blur-[100px]" />
 
-      {/* Floating Tech Icons */}
-      <FloatingTechOrbit />
+        {/* Dots pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.15]"
+          style={{
+            backgroundImage: "radial-gradient(circle at center, var(--color-white) 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
+          }}
+        />
+
+        {/* Floating interactive background */}
+        <FloatingTechOrbit />
+      </div>
 
       <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center max-w-5xl">
-        {/* Status Badge */}
-        <FadeIn delay={0.1}>
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel border border-primary/20 text-primary text-sm font-medium mb-10">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-            </span>
-            Disponible para nuevas oportunidades
-          </div>
-        </FadeIn>
 
-        {/* Name */}
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-4 bg-gradient-to-b from-white via-white to-zinc-500 bg-clip-text text-transparent">
-          <TextReveal delay={0.2}>Ricardo</TextReveal>
-          <TextReveal delay={0.35}>Gratereaux</TextReveal>
+        <h1 className="relative flex flex-col text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-4 select-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[60%] bg-primary/20 blur-[80px] pointer-events-none -z-10 rounded-full" />
+          <TextReveal delay={0.2} className="bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent pb-2 pr-4">
+            Ricardo
+          </TextReveal>
+          <TextReveal delay={0.35} className={`pb-2 pr-4 bg-clip-text text-transparent ${isDeveloper ? 'bg-gradient-to-r from-primary via-violet-300 to-primary' : 'bg-gradient-to-r from-primary via-sky-300 to-primary'}`}>
+            Gratereaux
+          </TextReveal>
         </h1>
 
         {/* Role */}
         <FadeIn delay={0.5}>
-          <p className="text-lg md:text-xl text-primary font-mono tracking-wider uppercase mb-6">
-            Full Stack Software Developer
-          </p>
+          <div className="h-[28px] md:h-[28px] mb-6 flex items-center justify-center min-w-[300px]">
+            <TypeAnimation
+              sequence={[
+                'Full Stack Software Developer',
+                2500,
+                'Especialista en React & Next.js',
+                2000,
+                'Arquitectura .NET & Node.js',
+                2000,
+                'Apasionado por la UI/UX',
+                2000,
+              ]}
+              wrapper="p"
+              speed={50}
+              className="text-lg md:text-xl text-primary font-mono tracking-wider uppercase inline-block m-0 leading-none"
+              repeat={Infinity}
+            />
+          </div>
         </FadeIn>
 
         {/* Description (adapts to view mode) */}
@@ -106,8 +235,8 @@ export default function Hero() {
           <FadeIn delay={0.6} key={viewMode}>
             <p className="text-lg md:text-xl text-zinc-400 font-light leading-relaxed">
               {isDeveloper
-                ? "Diseñando arquitecturas limpias y construyendo aplicaciones modernas, rápidas y escalables con Next.js, TypeScript y Node.js."
-                : "Transformo ideas en productos digitales reales. Experiencia en liderazgo, diseño de producto y desarrollo Full Stack."}
+                ? "Formado en C#/.NET y Clean Architecture, ahora construyo aplicaciones modernas y escalables con Next.js, TypeScript y Node.js."
+                : "Desde 2021 construyendo software en el ITLA y en la industria. Experiencia en liderazgo de equipos y desarrollo Full Stack."}
             </p>
           </FadeIn>
         </div>
@@ -117,22 +246,16 @@ export default function Hero() {
           <MagneticButton>
             <a
               href="#projects"
-              className="group flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-all shadow-[0_0_30px_rgba(124,58,237,0.4)] hover:shadow-[0_0_50px_rgba(124,58,237,0.6)]"
+              className="group flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-all shadow-[0_0_30px_var(--primary-glow)] hover:shadow-[0_0_50px_var(--primary-glow-hover)]"
             >
               Ver Proyectos
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </a>
           </MagneticButton>
-          <MagneticButton>
-            <a
-              href="/cv.pdf"
-              target="_blank"
-              className="group flex items-center gap-2 px-8 py-4 bg-zinc-900/80 border border-white/10 text-white rounded-full font-medium hover:bg-zinc-800 hover:border-white/20 transition-all"
-            >
-              Descargar CV
-              <Download className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
-            </a>
-          </MagneticButton>
+          <GlassButton href="/cv.pdf" target="_blank">
+            Descargar CV
+            <Download className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
+          </GlassButton>
         </FadeIn>
 
         {/* Social Links */}
@@ -159,18 +282,6 @@ export default function Hero() {
               <LinkedInIcon className="w-6 h-6" />
             </a>
           </MagneticButton>
-        </FadeIn>
-
-        {/* Scroll indicator */}
-        <FadeIn delay={1.1}>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            className="mt-16 flex flex-col items-center gap-2 text-zinc-600"
-          >
-            <span className="text-xs font-mono tracking-widest uppercase">Scroll</span>
-            <div className="w-px h-8 bg-gradient-to-b from-zinc-600 to-transparent" />
-          </motion.div>
         </FadeIn>
       </div>
     </section>

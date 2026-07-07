@@ -9,7 +9,7 @@ interface ViewState {
 }
 
 export const useViewStore = create<ViewState>((set) => ({
-  viewMode: 'developer',
+  viewMode: 'recruiter',
   setViewMode: (mode) => set({ viewMode: mode }),
   toggleViewMode: () => set((state) => ({ 
     viewMode: state.viewMode === 'developer' ? 'recruiter' : 'developer' 

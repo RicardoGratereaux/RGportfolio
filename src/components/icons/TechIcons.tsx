@@ -7,7 +7,7 @@ export function NextjsIcon({ className = "w-6 h-6" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 180 180" fill="none">
       <mask id="mask0_408_134" maskUnits="userSpaceOnUse" x="0" y="0" width="180" height="180">
-        <circle cx="90" cy="90" r="90" fill="black"/>
+        <circle cx="90" cy="90" r="90" fill="white"/>
       </mask>
       <g mask="url(#mask0_408_134)">
         <circle cx="90" cy="90" r="87" fill="black" stroke="white" strokeWidth="6"/>

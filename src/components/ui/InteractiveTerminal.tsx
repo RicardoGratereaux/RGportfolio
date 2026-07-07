@@ -4,12 +4,15 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Terminal as TerminalIcon, X, Minus, Square } from "lucide-react";
 
+import { useViewStore } from "@/store/useViewStore";
+
 type Command = {
   input: string;
   output: React.ReactNode;
 };
 
 export default function InteractiveTerminal() {
+  const { viewMode } = useViewStore();
   const [isOpen, setIsOpen] = useState(false);
   const [history, setHistory] = useState<Command[]>([
     {
@@ -75,6 +78,10 @@ export default function InteractiveTerminal() {
     setInput("");
   };
 
+  if (viewMode === "recruiter") {
+    return null;
+  }
+
   return (
     <>
       {/* Floating Action Button */}
@@ -95,7 +102,7 @@ export default function InteractiveTerminal() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed bottom-24 right-6 z-50 w-full max-w-sm sm:max-w-md bg-zinc-950/95 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl"
+            className="fixed inset-x-4 bottom-4 md:inset-x-auto md:right-6 md:bottom-24 z-50 md:w-[400px] bg-zinc-950/95 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl origin-bottom-right"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-zinc-900/50">

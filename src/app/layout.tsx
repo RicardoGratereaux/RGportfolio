@@ -17,12 +17,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ricardo Gratereaux | Senior Software Engineer & Product Designer",
+  title: "Ricardo Gratereaux | Full Stack Software Developer",
   description: "Portfolio de Ricardo Gratereaux, Full Stack Software Developer enfocado en crear experiencias y arquitecturas modernas con Next.js, React y Node.js.",
-  keywords: ["Software Engineer", "Full Stack", "Next.js", "React", "TypeScript", "Product Designer"],
+  keywords: ["Software Engineer", "Full Stack", "Next.js", "React", "TypeScript", "Node.js"],
   openGraph: {
     title: "Ricardo Gratereaux",
-    description: "Senior Software Engineer & Product Designer",
+    description: "Full Stack Software Developer",
     url: "https://ricardogratereaux.dev",
     siteName: "Ricardo Gratereaux Portfolio",
     locale: "es_DO",
@@ -31,9 +31,11 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Ricardo Gratereaux",
-    description: "Senior Software Engineer & Product Designer",
+    description: "Full Stack Software Developer",
   },
 };
+
+import ThemeProvider from "@/components/ThemeProvider";
 
 export default function RootLayout({
   children,
@@ -45,13 +47,16 @@ export default function RootLayout({
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-50 selection:bg-violet-500/30">
-        <SmoothScroll>
-          <Navbar />
-          <ViewToggle />
-          {children}
-          <InteractiveTerminal />
-        </SmoothScroll>
+      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30 transition-colors duration-500 theme-recruiter">
+        <ThemeProvider>
+          <SmoothScroll>
+            <Navbar />
+            <ViewToggle />
+            {children}
+            <InteractiveTerminal />
+          </SmoothScroll>
+
+        </ThemeProvider>
       </body>
     </html>
   );

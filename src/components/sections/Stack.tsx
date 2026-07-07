@@ -4,7 +4,8 @@ import { useViewStore } from "@/store/useViewStore";
 import { FadeIn } from "@/components/animations/Reveal";
 import SpotlightCard from "@/components/ui/SpotlightCard";
 import { techIconMap } from "@/components/icons/TechIcons";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 interface TechItem {
   name: string;
@@ -74,10 +75,10 @@ const stackCategories: {
     subtitle: "Conocimientos complementarios",
     devSubtitle: "Cross-platform & additional skills",
     items: [
-      { name: "C#", level: "Intermedio", description: "OOP, .NET ecosystem" },
-      { name: ".NET", level: "Intermedio", description: "Web APIs, MVC" },
+      { name: "C#", level: "Avanzado", description: "OOP, SOLID, Design Patterns" },
+      { name: ".NET", level: "Avanzado", description: "Clean/Onion Architecture, Web APIs" },
       { name: "Python", level: "Básico", description: "Scripting, automation" },
-      { name: "SQL Server", level: "Intermedio", description: "T-SQL, procedures" },
+      { name: "SQL Server", level: "Avanzado", description: "T-SQL, procedures, queries" },
       { name: "REST APIs", level: "Avanzado", description: "Design & consumption" },
       { name: "SEO", level: "Avanzado", description: "Core Web Vitals, OG" },
     ],
@@ -94,10 +95,17 @@ export default function Stack() {
   const { viewMode } = useViewStore();
   const isDeveloper = viewMode === "developer";
 
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
+
   return (
-    <section id="stack" className="py-32 relative w-full">
+    <section id="stack" ref={containerRef} className="py-32 relative w-full">
       {/* Background Glow */}
-      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <motion.div style={{ y }} className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container mx-auto px-6">
         <FadeIn>
@@ -105,7 +113,7 @@ export default function Stack() {
             <div>
               <p className="text-primary font-mono text-sm mb-3 tracking-wider uppercase">Tecnologías</p>
               <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
-                Stack <span className="bg-gradient-to-r from-primary to-violet-400 bg-clip-text text-transparent">Principal</span>
+                Stack <span className={isDeveloper ? "bg-gradient-to-r from-primary to-violet-400 bg-clip-text text-transparent" : "bg-gradient-to-r from-primary to-sky-400 bg-clip-text text-transparent"}>Principal</span>
               </h2>
             </div>
             <p className="text-zinc-400 max-w-md text-sm md:text-base leading-relaxed">
@@ -140,7 +148,7 @@ export default function Stack() {
                         key={item.name}
                         initial={{ opacity: 0, x: -10 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
+                        viewport={{ once: false, amount: 0.2 }}
                         transition={{ delay: 0.05 * i, duration: 0.3 }}
                         className="group flex items-center gap-4 p-3 rounded-xl hover:bg-white/[0.03] transition-all cursor-default"
                       >

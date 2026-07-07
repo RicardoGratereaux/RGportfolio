@@ -5,17 +5,20 @@ import Experience from "@/components/sections/Experience";
 import FeaturedProject from "@/components/sections/FeaturedProject";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/layout/Footer";
+import PageTransition from "@/components/animations/PageTransition";
 
 export default function Home() {
   return (
-    <main className="flex flex-col w-full overflow-x-hidden">
-      <Hero />
-      <About />
-      <Stack />
-      <Experience />
-      <FeaturedProject />
-      <Contact />
-      <Footer />
-    </main>
+    <PageTransition>
+      <main className="flex flex-col w-full overflow-x-hidden">
+        <Hero />
+        <About />
+        <Stack />
+        <Experience />
+        <FeaturedProject />
+        <Contact />
+        <Footer />
+      </main>
+    </PageTransition>
   );
 }
