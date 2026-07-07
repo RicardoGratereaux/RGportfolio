@@ -3,7 +3,7 @@
 import { useViewStore } from "@/store/useViewStore";
 import { FadeIn } from "@/components/animations/Reveal";
 import SpotlightCard from "@/components/ui/SpotlightCard";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef } from "react";
 import { Code2, Users, Zap, Target } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
@@ -13,11 +13,6 @@ export default function About() {
   const isDeveloper = viewMode === "developer";
 
   const containerRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
 
   const stats = isDeveloper
     ? [
@@ -33,7 +28,7 @@ export default function About() {
 
   return (
     <section id="about" ref={containerRef} className="py-20 md:py-32 relative w-full">
-      <motion.div style={{ y }} className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" style={{ transform: 'translateZ(0)', willChange: 'transform' }} />
 
       <div className="container mx-auto px-6">
         <FadeIn>

@@ -2,7 +2,7 @@
 
 import { useViewStore } from "@/store/useViewStore";
 import { FadeIn } from "@/components/animations/Reveal";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef } from "react";
 import { Users, Monitor, GraduationCap } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
@@ -12,11 +12,6 @@ export default function Experience() {
   const isDeveloper = viewMode === "developer";
 
   const containerRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], ["20%", "-20%"]);
 
   const experiences = [
     {
@@ -59,7 +54,7 @@ export default function Experience() {
 
   return (
     <section id="experience" ref={containerRef} className="py-20 md:py-32 relative w-full">
-      <motion.div style={{ y }} className="absolute bottom-0 left-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none -translate-x-1/2" />
+      <div className="absolute bottom-0 left-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none -translate-x-1/2" style={{ transform: 'translateZ(0)', willChange: 'transform' }} />
 
       <div className="container mx-auto px-6">
         <FadeIn>

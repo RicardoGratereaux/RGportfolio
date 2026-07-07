@@ -1,11 +1,13 @@
 import Hero from "@/components/sections/Hero";
-import About from "@/components/sections/About";
-import Stack from "@/components/sections/Stack";
-import Experience from "@/components/sections/Experience";
-import FeaturedProject from "@/components/sections/FeaturedProject";
-import Contact from "@/components/sections/Contact";
 import Footer from "@/components/layout/Footer";
 import PageTransition from "@/components/animations/PageTransition";
+import dynamic from "next/dynamic";
+
+const About = dynamic(() => import("@/components/sections/About"));
+const Stack = dynamic(() => import("@/components/sections/Stack"));
+const Experience = dynamic(() => import("@/components/sections/Experience"));
+const FeaturedProject = dynamic(() => import("@/components/sections/FeaturedProject"));
+const Contact = dynamic(() => import("@/components/sections/Contact"));
 
 export default function Home() {
   return (

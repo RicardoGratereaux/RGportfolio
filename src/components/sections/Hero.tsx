@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform, useScroll, useAnimationFrame } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useAnimationFrame } from "framer-motion";
 
 import { useViewStore } from "@/store/useViewStore";
 import { FadeIn, TextReveal } from "@/components/animations/Reveal";
@@ -141,7 +141,7 @@ function FloatingTechOrbit() {
 
   if (!mounted) return null;
 
-  const extendedTechItems = [...heroTechItems, ...heroTechItems, ...heroTechItems];
+  const extendedTechItems = [...heroTechItems, ...heroTechItems];
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -164,9 +164,6 @@ function FloatingTechOrbit() {
 export default function Hero() {
   const { viewMode } = useViewStore();
   const isDeveloper = viewMode === "developer";
-  const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 1000], [0, 200]);
-  const y2 = useTransform(scrollY, [0, 1000], [0, -150]);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden w-full">
@@ -179,9 +176,9 @@ export default function Hero() {
         }}
       >
         {/* Background Effects */}
-        <motion.div style={{ y: y1 }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px]" />
-        <motion.div style={{ y: y2 }} className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[120px]" />
-        <motion.div style={{ y: y1 }} className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-violet-600/10 rounded-full blur-[100px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px]" style={{ transform: 'translateZ(0)', willChange: 'transform' }} />
+        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[120px]" style={{ transform: 'translateZ(0)', willChange: 'transform' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-violet-600/10 rounded-full blur-[100px]" style={{ transform: 'translateZ(0)', willChange: 'transform' }} />
 
         {/* Dots pattern */}
         <div

@@ -4,7 +4,7 @@ import { useViewStore } from "@/store/useViewStore";
 import { FadeIn } from "@/components/animations/Reveal";
 import SpotlightCard from "@/components/ui/SpotlightCard";
 import { techIconMap } from "@/components/icons/TechIcons";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef } from "react";
 
 interface TechItem {
@@ -96,16 +96,11 @@ export default function Stack() {
   const isDeveloper = viewMode === "developer";
 
   const containerRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
 
   return (
     <section id="stack" ref={containerRef} className="py-32 relative w-full">
       {/* Background Glow */}
-      <motion.div style={{ y }} className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" style={{ transform: 'translateZ(0)', willChange: 'transform' }} />
 
       <div className="container mx-auto px-6">
         <FadeIn>
@@ -148,7 +143,7 @@ export default function Stack() {
                         key={item.name}
                         initial={{ opacity: 0, x: -10 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, amount: 0.2 }}
+                        viewport={{ once: true, amount: 0.2 }}
                         transition={{ delay: 0.05 * i, duration: 0.3 }}
                         className="group flex items-center gap-4 p-3 rounded-xl hover:bg-white/[0.03] transition-all cursor-default"
                       >

@@ -43,7 +43,7 @@ export function TextReveal({
           }}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: false }}
+          viewport={{ once: true }}
           transition={{
             type: "spring",
             damping: 20,
@@ -76,7 +76,7 @@ export function FadeIn({
       }}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: false, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.2 }}
       transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
