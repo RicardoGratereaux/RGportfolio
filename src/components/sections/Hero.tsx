@@ -39,11 +39,16 @@ function FloatingTechItem({
   i,
   smoothX,
   smoothY,
+  mousePixelX,
+  mousePixelY,
+  total,
 }: {
   tech: any;
   i: number;
   smoothX: any;
   smoothY: any;
+  mousePixelX: any;
+  mousePixelY: any;
   total: number;
 }) {
   const random = (seed: number) => {
@@ -72,9 +77,37 @@ function FloatingTechItem({
   const size = 32 + random(i + 700) * 32;
   const opacity = 0.4 + random(i + 800) * 0.4; // Increased visibility
 
+  const ref = useRef<HTMLDivElement>(null);
+  const repulseX = useSpring(0, { damping: 25, stiffness: 90, mass: 1.2 });
+  const repulseY = useSpring(0, { damping: 25, stiffness: 90, mass: 1.2 });
+
+  useAnimationFrame(() => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    const mx = mousePixelX.get();
+    const my = mousePixelY.get();
+
+    const dx = centerX - mx;
+    const dy = centerY - my;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const maxDistance = 600;
+
+    if (distance < maxDistance && distance > 0) {
+      const force = (maxDistance - distance) / maxDistance;
+      repulseX.set((dx / distance) * force * 290); 
+      repulseY.set((dy / distance) * force * 290);
+    } else {
+      repulseX.set(0);
+      repulseY.set(0);
+    }
+  });
+
   return (
     <motion.div
-      className="absolute flex items-center justify-center"
+      className="absolute flex items-center justify-center pointer-events-none"
       style={{
         left: `${startX}%`,
         top: `${startY}%`,
@@ -92,18 +125,21 @@ function FloatingTechItem({
         ease: "easeInOut",
       }}
     >
-      <motion.div
-        className="rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl flex items-center justify-center overflow-hidden"
-        style={{
-          width: size,
-          height: size,
-          x: parallaxX,
-          y: parallaxY,
-        }}
-        whileHover={{ scale: 1.1, rotate: 5 }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity" />
-        <tech.Icon className="w-1/2 h-1/2 opacity-70 hover:opacity-100 transition-opacity" />
+      <motion.div style={{ x: parallaxX, y: parallaxY }}>
+        <motion.div
+          ref={ref}
+          className="rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl flex items-center justify-center overflow-hidden pointer-events-auto"
+          style={{
+            width: size,
+            height: size,
+            x: repulseX,
+            y: repulseY,
+          }}
+          whileHover={{ scale: 1.1, rotate: 5 }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity" />
+          <tech.Icon className="w-1/2 h-1/2 opacity-70 hover:opacity-100 transition-opacity" />
+        </motion.div>
       </motion.div>
     </motion.div>
   );
@@ -113,6 +149,8 @@ function FloatingTechOrbit() {
   const [mounted, setMounted] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const mousePixelX = useMotionValue(-1000);
+  const mousePixelY = useMotionValue(-1000);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -120,11 +158,14 @@ function FloatingTechOrbit() {
       const ny = (e.clientY / window.innerHeight) * 2 - 1;
       mouseX.set(nx);
       mouseY.set(ny);
+      
+      mousePixelX.set(e.clientX);
+      mousePixelY.set(e.clientY);
     };
     window.addEventListener("mousemove", handleMouseMove);
     setMounted(true);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, mousePixelX, mousePixelY]);
 
   const smoothX = useSpring(mouseX, { damping: 20, stiffness: 300 });
   const smoothY = useSpring(mouseY, { damping: 20, stiffness: 300 });
@@ -144,6 +185,8 @@ function FloatingTechOrbit() {
             i={i}
             smoothX={smoothX}
             smoothY={smoothY}
+            mousePixelX={mousePixelX}
+            mousePixelY={mousePixelY}
             total={itemsToRender.length}
           />
         ))}
