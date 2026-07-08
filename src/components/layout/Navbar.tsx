@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import MagneticButton from "@/components/ui/MagneticButton";
+import GlassButton from "@/components/ui/GlassButton";
 import { Menu, X } from "lucide-react";
 
 import dynamic from 'next/dynamic';
@@ -49,11 +49,12 @@ export default function Navbar() {
                 maskImage: "linear-gradient(to bottom, transparent 15%, black 85%)"
               }}>
                 <LiquidGlass 
-                  className="w-full h-full border-x-0 border-t-0 bg-white/[0.02]" 
+                  className="bg-white/[0.02]" 
                   displacementScale={120} 
                   blurAmount={0.05}
+                  cornerRadius={0}
                 >
-                  <div />
+                  <div className="w-screen h-16" />
                 </LiquidGlass>
               </div>
             </motion.div>
@@ -82,19 +83,9 @@ export default function Navbar() {
 
           {/* CTA */}
           <div className="hidden md:block">
-            <MagneticButton>
-              <a
-                href="#contact"
-                className="relative isolate overflow-hidden group px-6 py-2.5 text-sm font-medium text-white rounded-full hover:scale-105 transition-all flex items-center justify-center"
-              >
-                <div className="absolute inset-0 w-full h-full z-[-1] pointer-events-none">
-                  <LiquidGlass className="w-full h-full bg-white/[0.05]" displacementScale={30} cornerRadius={9999} blurAmount={0.02}>
-                    <div />
-                  </LiquidGlass>
-                </div>
-                Hablemos
-              </a>
-            </MagneticButton>
+            <GlassButton href="#contact" className="!px-5 !py-2 text-sm">
+              Hablemos
+            </GlassButton>
           </div>
 
           {/* Mobile toggle */}
@@ -117,9 +108,9 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -20 }}
             className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 md:hidden"
           >
-            <div className="absolute inset-0 z-[-1] pointer-events-none">
-              <LiquidGlass className="w-full h-full bg-black/50" displacementScale={80} blurAmount={0.1}>
-                <div />
+            <div className="absolute inset-0 z-[-1] pointer-events-none overflow-hidden">
+              <LiquidGlass displacementScale={80} blurAmount={0.1} cornerRadius={0} className="bg-black/50">
+                <div className="w-screen h-screen" />
               </LiquidGlass>
             </div>
             {navLinks.map((link, i) => (
