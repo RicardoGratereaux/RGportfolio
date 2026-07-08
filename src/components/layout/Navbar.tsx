@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { Menu, X } from "lucide-react";
 
-import LiquidGlass from "@/components/ui/LiquidGlass";
+import dynamic from 'next/dynamic';
+
+const LiquidGlass = dynamic(() => import('liquid-glass-react'), { ssr: false });
 
 const navLinks = [
   { label: "Sobre Mí", href: "#about" },
@@ -42,14 +44,18 @@ export default function Navbar() {
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="absolute inset-0 pointer-events-none"
             >
-              <LiquidGlass 
-                className="border-x-0 border-t-0" 
-                distortionScale={120} 
-                edgeMask="linear-gradient(to bottom, transparent 15%, black 85%)" 
-                noShadow 
-                filterX="0" 
-                filterWidth="100%" 
-              />
+              <div className="absolute inset-0 pointer-events-none" style={{
+                WebkitMaskImage: "linear-gradient(to bottom, transparent 15%, black 85%)",
+                maskImage: "linear-gradient(to bottom, transparent 15%, black 85%)"
+              }}>
+                <LiquidGlass 
+                  className="w-full h-full border-x-0 border-t-0 bg-white/[0.02]" 
+                  displacementScale={120} 
+                  blurAmount={0.05}
+                >
+                  <div />
+                </LiquidGlass>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -81,7 +87,11 @@ export default function Navbar() {
                 href="#contact"
                 className="relative isolate overflow-hidden group px-6 py-2.5 text-sm font-medium text-white rounded-full hover:scale-105 transition-all flex items-center justify-center"
               >
-                <LiquidGlass className="z-[-1] rounded-full" distortionScale={30} />
+                <div className="absolute inset-0 w-full h-full z-[-1] pointer-events-none">
+                  <LiquidGlass className="w-full h-full bg-white/[0.05]" displacementScale={30} cornerRadius={9999} blurAmount={0.02}>
+                    <div />
+                  </LiquidGlass>
+                </div>
                 Hablemos
               </a>
             </MagneticButton>
@@ -107,7 +117,11 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -20 }}
             className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 md:hidden"
           >
-            <LiquidGlass className="z-[-1]" distortionScale={80} />
+            <div className="absolute inset-0 z-[-1] pointer-events-none">
+              <LiquidGlass className="w-full h-full bg-black/50" displacementScale={80} blurAmount={0.1}>
+                <div />
+              </LiquidGlass>
+            </div>
             {navLinks.map((link, i) => (
               <motion.a
                 key={link.href}

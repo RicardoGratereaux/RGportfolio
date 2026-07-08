@@ -3,7 +3,54 @@
 import { useViewStore } from "@/store/useViewStore";
 import { FadeIn } from "@/components/animations/Reveal";
 import SpotlightCard from "@/components/ui/SpotlightCard";
-import { techIconMap } from "@/components/icons/TechIcons";
+import {
+  NextjsIcon, ReactIcon, TypeScriptIcon, TailwindIcon, FramerMotionIcon, LenisIcon, HTML5Icon, CSS3Icon, JavaScriptIcon, NodejsIcon, RestAPIIcon, PrismaIcon, PostgreSQLIcon, NextAuthIcon, ZodIcon, BcryptIcon, StripeIcon, ResendIcon, VercelBlobIcon, VitestIcon, ESLintIcon, GitIcon, GitHubIcon, VercelIcon, VSCodeIcon, PnpmIcon, CSharpIcon, DotNetIcon, PythonIcon, SQLServerIcon, SEOIcon, BootstrapIcon
+} from "@/components/icons/TechIcons";
+
+const techIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  "Next.js 16": NextjsIcon,
+  "Next.js": NextjsIcon,
+  "React 19": ReactIcon,
+  "React": ReactIcon,
+  "TypeScript": TypeScriptIcon,
+  "Tailwind CSS v4": TailwindIcon,
+  "Tailwind CSS": TailwindIcon,
+  "Tailwind v4": TailwindIcon,
+  "Framer Motion": FramerMotionIcon,
+  "Lenis": LenisIcon,
+  "HTML5/CSS3": HTML5Icon,
+  "HTML5": HTML5Icon,
+  "CSS3": CSS3Icon,
+  "JavaScript ES6": JavaScriptIcon,
+  "JavaScript": JavaScriptIcon,
+  "Node.js": NodejsIcon,
+  "Next.js Server Actions": NextjsIcon,
+  "API Routes": RestAPIIcon,
+  "Prisma": PrismaIcon,
+  "PostgreSQL": PostgreSQLIcon,
+  "NextAuth": NextAuthIcon,
+  "Zod": ZodIcon,
+  "Bcrypt": BcryptIcon,
+  "Stripe": StripeIcon,
+  "Resend": ResendIcon,
+  "Vercel Blob": VercelBlobIcon,
+  "Vitest": VitestIcon,
+  "ESLint": ESLintIcon,
+  "Git / GitHub": GitIcon,
+  "Git": GitIcon,
+  "GitHub": GitHubIcon,
+  "Vercel": VercelIcon,
+  "VS Code": VSCodeIcon,
+  "pnpm": PnpmIcon,
+  "C#": CSharpIcon,
+  ".NET": DotNetIcon,
+  "Python": PythonIcon,
+  "SQL Server": SQLServerIcon,
+  "REST APIs": RestAPIIcon,
+  "SEO": SEOIcon,
+  "Bootstrap": BootstrapIcon,
+  "Responsive Design": CSS3Icon,
+};
 import { motion } from "framer-motion";
 import { useRef } from "react";
 

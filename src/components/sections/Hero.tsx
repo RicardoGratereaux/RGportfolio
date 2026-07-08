@@ -7,7 +7,30 @@ import { useViewStore } from "@/store/useViewStore";
 import { FadeIn, TextReveal } from "@/components/animations/Reveal";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { ArrowRight, Download } from "lucide-react";
-import { GitHubIcon, LinkedInIcon, heroTechItems } from "@/components/icons/TechIcons";
+import { GitHubIcon, LinkedInIcon, NextjsIcon, ReactIcon, TypeScriptIcon, TailwindIcon, NodejsIcon, PrismaIcon, PostgreSQLIcon, StripeIcon, FramerMotionIcon, JavaScriptIcon, HTML5Icon, CSS3Icon, GitIcon, VercelIcon, PythonIcon, CSharpIcon, DotNetIcon, ZodIcon, ESLintIcon, VSCodeIcon } from "@/components/icons/TechIcons";
+
+const heroTechItems = [
+  { name: "Next.js", Icon: NextjsIcon },
+  { name: "React", Icon: ReactIcon },
+  { name: "TypeScript", Icon: TypeScriptIcon },
+  { name: "Tailwind", Icon: TailwindIcon },
+  { name: "Node.js", Icon: NodejsIcon },
+  { name: "Prisma", Icon: PrismaIcon },
+  { name: "PostgreSQL", Icon: PostgreSQLIcon },
+  { name: "Stripe", Icon: StripeIcon },
+  { name: "Framer Motion", Icon: FramerMotionIcon },
+  { name: "JavaScript", Icon: JavaScriptIcon },
+  { name: "HTML5", Icon: HTML5Icon },
+  { name: "CSS3", Icon: CSS3Icon },
+  { name: "Git", Icon: GitIcon },
+  { name: "Vercel", Icon: VercelIcon },
+  { name: "Python", Icon: PythonIcon },
+  { name: "C#", Icon: CSharpIcon },
+  { name: ".NET", Icon: DotNetIcon },
+  { name: "Zod", Icon: ZodIcon },
+  { name: "ESLint", Icon: ESLintIcon },
+  { name: "VS Code", Icon: VSCodeIcon },
+];
 import GlassButton from "@/components/ui/GlassButton";
 import { TypeAnimation } from 'react-type-animation';
 
@@ -16,15 +39,11 @@ function FloatingTechItem({
   i,
   smoothX,
   smoothY,
-  mousePixelX,
-  mousePixelY,
 }: {
   tech: any;
   i: number;
   smoothX: any;
   smoothY: any;
-  mousePixelX: any;
-  mousePixelY: any;
   total: number;
 }) {
   const random = (seed: number) => {
@@ -50,40 +69,12 @@ function FloatingTechItem({
   const parallaxX = useTransform(smoothX, (v: number) => v * parallaxFactor);
   const parallaxY = useTransform(smoothY, (v: number) => v * parallaxFactor);
 
-  const size = 24 + random(i + 700) * 32;
+  const size = 32 + random(i + 700) * 32;
   const opacity = 0.4 + random(i + 800) * 0.4; // Increased visibility
-
-  const ref = useRef<HTMLDivElement>(null);
-  const repulseX = useSpring(0, { damping: 25, stiffness: 90, mass: 1.2 });
-  const repulseY = useSpring(0, { damping: 25, stiffness: 90, mass: 1.2 });
-
-  useAnimationFrame(() => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    const mx = mousePixelX.get();
-    const my = mousePixelY.get();
-
-    const dx = centerX - mx;
-    const dy = centerY - my;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    const maxDistance = 600;
-
-    if (distance < maxDistance && distance > 0) {
-      const force = (maxDistance - distance) / maxDistance;
-      repulseX.set((dx / distance) * force * 290); 
-      repulseY.set((dy / distance) * force * 290);
-    } else {
-      repulseX.set(0);
-      repulseY.set(0);
-    }
-  });
 
   return (
     <motion.div
-      className="absolute flex items-center justify-center pointer-events-none"
+      className="absolute flex items-center justify-center"
       style={{
         left: `${startX}%`,
         top: `${startY}%`,
@@ -101,14 +92,18 @@ function FloatingTechItem({
         ease: "easeInOut",
       }}
     >
-      <motion.div style={{ x: parallaxX, y: parallaxY }}>
-        <motion.div
-          ref={ref}
-          style={{ width: size, height: size, x: repulseX, y: repulseY }}
-          className="rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md flex items-center justify-center"
-        >
-          <tech.Icon className="w-1/2 h-1/2 opacity-70" />
-        </motion.div>
+      <motion.div
+        className="rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl flex items-center justify-center overflow-hidden"
+        style={{
+          width: size,
+          height: size,
+          x: parallaxX,
+          y: parallaxY,
+        }}
+        whileHover={{ scale: 1.1, rotate: 5 }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity" />
+        <tech.Icon className="w-1/2 h-1/2 opacity-70 hover:opacity-100 transition-opacity" />
       </motion.div>
     </motion.div>
   );
@@ -118,8 +113,6 @@ function FloatingTechOrbit() {
   const [mounted, setMounted] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const mousePixelX = useMotionValue(-1000);
-  const mousePixelY = useMotionValue(-1000);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -127,36 +120,34 @@ function FloatingTechOrbit() {
       const ny = (e.clientY / window.innerHeight) * 2 - 1;
       mouseX.set(nx);
       mouseY.set(ny);
-      
-      mousePixelX.set(e.clientX);
-      mousePixelY.set(e.clientY);
     };
     window.addEventListener("mousemove", handleMouseMove);
     setMounted(true);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY, mousePixelX, mousePixelY]);
+  }, [mouseX, mouseY]);
 
   const smoothX = useSpring(mouseX, { damping: 20, stiffness: 300 });
   const smoothY = useSpring(mouseY, { damping: 20, stiffness: 300 });
 
   if (!mounted) return null;
 
-  const extendedTechItems = [...heroTechItems, ...heroTechItems];
+  // Reduced items to prevent lag on mobile (using just heroTechItems instead of duplicating)
+  const itemsToRender = heroTechItems;
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-      {extendedTechItems.map((tech, i) => (
-        <FloatingTechItem
-          key={`${tech.name}-${i}`}
-          tech={tech}
-          i={i}
-          smoothX={smoothX}
-          smoothY={smoothY}
-          mousePixelX={mousePixelX}
-          mousePixelY={mousePixelY}
-          total={extendedTechItems.length}
-        />
-      ))}
+      <div className="pointer-events-auto w-full h-full">
+        {itemsToRender.map((tech, i) => (
+          <FloatingTechItem
+            key={`${tech.name}-${i}`}
+            tech={tech}
+            i={i}
+            smoothX={smoothX}
+            smoothY={smoothY}
+            total={itemsToRender.length}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -202,7 +193,7 @@ export default function Hero() {
           </TextReveal>
           <TextReveal delay={0.35} className={`pb-2 pr-4 bg-clip-text text-transparent ${isDeveloper ? 'bg-gradient-to-r from-primary via-violet-300 to-primary' : 'bg-gradient-to-r from-primary via-sky-300 to-primary'}`}>
             Gratereaux
-          </TextReveal>
+          </TextReveal> 
         </h1>
 
         {/* Role */}
