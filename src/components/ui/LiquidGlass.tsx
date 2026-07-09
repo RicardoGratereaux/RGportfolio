@@ -4,6 +4,7 @@ import React, { useId, useState, useEffect } from "react";
 
 interface LiquidGlassProps {
   className?: string;
+  blurAmount?: number;
   distortionScale?: number;
   edgeMask?: string;
   noShadow?: boolean;
@@ -15,6 +16,7 @@ interface LiquidGlassProps {
 
 export default function LiquidGlass({
   className = "",
+  blurAmount = 12,
   distortionScale = 25,
   edgeMask,
   noShadow = false,
@@ -26,6 +28,11 @@ export default function LiquidGlass({
   const filterId = useId().replace(/:/g, "");
   const [isMobile, setIsMobile] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
+  const glassBackdropStyle = {
+    backdropFilter: `blur(${blurAmount}px) saturate(140%)`,
+    WebkitBackdropFilter: `blur(${blurAmount}px) saturate(140%)`,
+  };
+  const noiseBlur = Math.max(1, blurAmount / 6);
 
   useEffect(() => {
     // Detect mobile/tablet/touch
@@ -61,11 +68,10 @@ export default function LiquidGlass({
         <div
           className={`absolute inset-0 pointer-events-none ${className}`}
           style={{
-            backdropFilter: `blur(12px)`,
-            WebkitBackdropFilter: `blur(12px)`,
             background: "var(--glass-liquid-bg, rgba(255, 255, 255, 0.02))",
             WebkitMaskImage: edgeMask,
             maskImage: edgeMask,
+            ...glassBackdropStyle,
           }}
         />
         <div
@@ -86,9 +92,8 @@ export default function LiquidGlass({
       <div
         className={`absolute inset-0 pointer-events-none ${className}`}
         style={{
-          backdropFilter: `blur(2px)`,
-          WebkitBackdropFilter: `blur(2px)`,
           background: "var(--glass-liquid-bg, rgba(255, 255, 255, 0.02))",
+          ...glassBackdropStyle,
         }}
       />
 
@@ -96,8 +101,6 @@ export default function LiquidGlass({
       <div
         className={`absolute inset-0 pointer-events-none ${className}`}
         style={{
-          backdropFilter: `blur(8px) url(#${filterId})`,
-          WebkitBackdropFilter: `blur(8px) url(#${filterId})`,
           WebkitMaskImage: edgeMask || "radial-gradient(ellipse at center, transparent 20%, black 90%)",
           maskImage: edgeMask || "radial-gradient(ellipse at center, transparent 20%, black 90%)",
           transform: "translate3d(0, 0, 0)",
@@ -121,7 +124,7 @@ export default function LiquidGlass({
             numOctaves="1"
             result="noise"
           />
-          <feGaussianBlur in="noise" stdDeviation="2.5" result="smoothNoise" />
+          <feGaussianBlur in="noise" stdDeviation={noiseBlur.toString()} result="smoothNoise" />
           
           {/* Optimized Single Displacement Map (3x faster than chromatic aberration splits) */}
           <feDisplacementMap

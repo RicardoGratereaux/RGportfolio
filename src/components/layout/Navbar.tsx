@@ -42,9 +42,9 @@ export default function Navbar() {
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="absolute inset-0 pointer-events-none"
             >
-              <LiquidGlass 
-                className="bg-white/[0.02]" 
+              <LiquidGlass
                 distortionScale={120} 
+                blurAmount={20}
               />
             </motion.div>
           )}
@@ -98,7 +98,7 @@ export default function Navbar() {
             className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 md:hidden"
           >
             <div className="absolute inset-0 z-[-1] pointer-events-none overflow-hidden">
-              <LiquidGlass distortionScale={80} className="bg-black/50" />
+              <LiquidGlass distortionScale={80} blurAmount={0.1} />
             </div>
             {navLinks.map((link, i) => (
               <motion.a

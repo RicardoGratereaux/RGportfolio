@@ -25,19 +25,6 @@ html {
   --primary-glow: color-mix(in srgb, var(--primary) 40%, transparent);
   --primary-glow-hover: color-mix(in srgb, var(--primary) 60%, transparent);
   --primary-spotlight: color-mix(in srgb, var(--primary) 15%, transparent);
-
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-panel-bg: rgba(9, 9, 11, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.05);
-  --glass-panel-border: rgba(255, 255, 255, 0.08);
-  
-  --glass-liquid-bg: rgba(9, 9, 11, 0.1);
-  --glass-liquid-border: rgba(255, 255, 255, 0.05);
-  --glass-liquid-border-highlight: rgba(255, 255, 255, 0.1);
-  --glass-liquid-shadow: 
-    0 8px 32px 0 rgba(0, 0, 0, 0.3),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
-    inset 0 1px 1px rgba(255, 255, 255, 0.15);
 }
 
 .theme-recruiter {
@@ -64,19 +51,6 @@ html {
   
   --color-white: #0f172a;
   --color-black: #ffffff;
-
-  --glass-bg: rgba(15, 23, 42, 0.03);
-  --glass-panel-bg: rgba(248, 250, 252, 0.6);
-  --glass-border: rgba(15, 23, 42, 0.05);
-  --glass-panel-border: rgba(15, 23, 42, 0.08);
-  
-  --glass-liquid-bg: rgba(255, 255, 255, 0.15);
-  --glass-liquid-border: rgba(15, 23, 42, 0.05);
-  --glass-liquid-border-highlight: rgba(15, 23, 42, 0.1);
-  --glass-liquid-shadow: 
-    0 8px 32px 0 rgba(15, 23, 42, 0.1),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.4),
-    inset 0 1px 1px rgba(255, 255, 255, 0.8);
 }
 
 body {
@@ -85,21 +59,6 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Utilities for glassmorphism and subtle borders */
-@utility glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-}
-
-@utility glass-panel {
-  background: var(--glass-panel-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-panel-border);
 }
 
 /* Background floating animations (GPU accelerated) */

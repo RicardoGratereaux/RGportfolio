@@ -1,9 +1,73 @@
-import React from "react";
+import type { CSSProperties, SVGProps } from "react";
 
-export function CSharpIcon({ className = "w-6 h-6" }: { className?: string }) {
+interface CSharpIconProps extends SVGProps<SVGSVGElement> {
+  size?: number | string;
+  color?: string;
+  strokeWidth?: number;
+  background?: string;
+  opacity?: number;
+  rotation?: number;
+  shadow?: number;
+  flipHorizontal?: boolean;
+  flipVertical?: boolean;
+  padding?: number;
+  className?: string;
+  style?: CSSProperties;
+}
+
+export const CSharpIcon = ({
+  size,
+  color = "#000000",
+  strokeWidth = 2,
+  background = "transparent",
+  opacity = 1,
+  rotation = 0,
+  shadow = 0,
+  flipHorizontal = false,
+  flipVertical = false,
+  padding = 0,
+  className,
+  style,
+  ...props
+}: CSharpIconProps) => {
+  const transforms = [] as string[];
+  if (rotation !== 0) transforms.push(`rotate(${rotation}deg)`);
+  if (flipHorizontal) transforms.push("scaleX(-1)");
+  if (flipVertical) transforms.push("scaleY(-1)");
+
+  const viewBoxSize = 24 + padding * 2;
+  const viewBoxOffset = -padding;
+  const viewBox = `${viewBoxOffset} ${viewBoxOffset} ${viewBoxSize} ${viewBoxSize}`;
+
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="#68217A">
-      <path d="M11.5 15.97l.348-.02c1.7-.09 3.104-.73 4.177-1.902 1.166-1.275 1.75-2.902 1.75-4.852 0-1.89-.542-3.415-1.625-4.58-1.09-1.17-2.502-1.76-4.227-1.76-1.752 0-3.188.583-4.3 1.75C6.502 5.787 5.94 7.314 5.94 9.19c0 1.896.556 3.434 1.67 4.614C8.716 14.96 10.05 15.582 11.77 15.668l-.27.302zm5.608-.93l1.3-.75.75 1.3-1.3.75.75 1.3-1.3.75-.75-1.3-1.3.75-.75-1.3 1.3-.75-.75-1.3 1.3-.75zm4 0l1.3-.75.75 1.3-1.3.75.75 1.3-1.3.75-.75-1.3-1.3.75-.75-1.3 1.3-.75-.75-1.3 1.3-.75z"/>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox={viewBox}
+      width={size}
+      height={size}
+      fill="none"
+      stroke={color}
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      style={{
+        opacity,
+        transform: transforms.join(" ") || undefined,
+        filter: shadow > 0 ? `drop-shadow(0 ${shadow}px ${shadow * 2}px rgba(0,0,0,0.3))` : undefined,
+        backgroundColor: background !== "transparent" ? background : undefined,
+        ...style,
+      }}
+      {...props}
+    >
+      <defs>
+        <linearGradient id="SVGhL7Bld0f" x1="17.42%" x2="56.516%" y1="21.86%" y2="97.437%">
+          <stop offset="0%" stopColor="#927BE5" />
+          <stop offset="100%" stopColor="#512BD4" />
+        </linearGradient>
+      </defs>
+      <path fill="url(#SVGhL7Bld0f)" d="M0 89.355v105.576c0 13.06 6.967 25.14 18.286 31.666l91.429 52.794a36.56 36.56 0 0 0 36.571 0l91.429-52.794A36.56 36.56 0 0 0 256 194.93V89.356a36.56 36.56 0 0 0-18.285-31.672l-91.43-52.78a36.55 36.55 0 0 0-36.57 0l-91.43 52.78A36.57 36.57 0 0 0 0 89.356" />
+      <path fill="#FFF" d="M64.003 123.872v36.575a9.13 9.13 0 0 0 9.145 9.145a9.14 9.14 0 0 0 9.145-9.145a9.142 9.142 0 1 1 18.285 0c0 15.149-12.28 27.43-27.43 27.43s-27.43-12.281-27.43-27.43v-36.57c0-15.15 12.28-27.43 27.43-27.43s27.43 12.28 27.43 27.43a9.142 9.142 0 0 1-18.285 0a9.142 9.142 0 1 0-18.285 0zm146.29 36.575a9.134 9.134 0 0 1-9.146 9.145h-9.145v9.14c0 2.427-.96 4.753-2.678 6.466a9.124 9.124 0 0 1-12.928 0a9.17 9.17 0 0 1-2.679-6.467v-9.14h-18.284v9.14a9.124 9.124 0 0 1-9.146 9.146a9.124 9.124 0 0 1-9.14-9.146v-9.14h-9.15a9.142 9.142 0 0 1 0-18.284h9.145v-18.285h-9.145a9.142 9.142 0 0 1 0-18.285h9.145v-9.145a9.142 9.142 0 0 1 18.285 0v9.14h18.285v-9.14a9.142 9.142 0 0 1 18.285 0v9.14h9.145a9.12 9.12 0 0 1 6.461 2.678a9.124 9.124 0 0 1 0 12.928a9.13 9.13 0 0 1-6.46 2.684h-9.146v18.285h9.145a9.166 9.166 0 0 1 9.145 9.14zm-36.576-27.425h-18.284v18.285h18.284z" />
     </svg>
   );
-}
+};

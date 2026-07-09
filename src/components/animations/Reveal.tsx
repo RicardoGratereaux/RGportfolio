@@ -3,9 +3,6 @@
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 
-import { useState, useEffect } from "react";
-
-// Global scroll direction tracker (outside React state to avoid re-renders)
 let globalScrollDirection = 1;
 
 if (typeof window !== "undefined") {
