@@ -102,4 +102,38 @@ body {
   border: 1px solid var(--glass-panel-border);
 }
 
+/* Background floating animations (GPU accelerated) */
+@keyframes float-slow-1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(40px, -50px, 0) scale(1.05) rotate(5deg);
+  }
+  66% {
+    transform: translate3d(-20px, 30px, 0) scale(0.95) rotate(-5deg);
+  }
+}
+
+@keyframes float-slow-2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(-50px, 40px, 0) scale(1.08) rotate(-10deg);
+  }
+}
+
+.animate-float-blob-1 {
+  animation: float-slow-1 25s infinite ease-in-out;
+}
+
+.animate-float-blob-2 {
+  animation: float-slow-2 30s infinite ease-in-out;
+}
+
+.animate-float-blob-3 {
+  animation: float-slow-1 22s infinite ease-in-out reverse;
+}
+
 

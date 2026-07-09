@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform, useAnimationFrame } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 import { useViewStore } from "@/store/useViewStore";
 import { FadeIn, TextReveal } from "@/components/animations/Reveal";
@@ -33,6 +33,7 @@ const heroTechItems = [
 ];
 import GlassButton from "@/components/ui/GlassButton";
 import { TypeAnimation } from 'react-type-animation';
+import LiquidGlass from "@/components/ui/LiquidGlass";
 
 function FloatingTechItem({
   tech,
@@ -78,32 +79,70 @@ function FloatingTechItem({
   const opacity = 0.4 + random(i + 800) * 0.4; // Increased visibility
 
   const ref = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null);
   const repulseX = useSpring(0, { damping: 25, stiffness: 90, mass: 1.2 });
   const repulseY = useSpring(0, { damping: 25, stiffness: 90, mass: 1.2 });
 
-  useAnimationFrame(() => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    const mx = mousePixelX.get();
-    const my = mousePixelY.get();
+  useEffect(() => {
+    const updateRect = () => {
+      if (ref.current) {
+        const rect = ref.current.getBoundingClientRect();
+        rectRef.current = {
+          // Adjust for any current repulsion offset to get the clean baseline coordinates
+          left: rect.left + window.scrollX - repulseX.get(),
+          top: rect.top + window.scrollY - repulseY.get(),
+          width: rect.width,
+          height: rect.height,
+        };
+      }
+    };
 
-    const dx = centerX - mx;
-    const dy = centerY - my;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    const maxDistance = 600;
+    // Calculate initial positions
+    updateRect();
 
-    if (distance < maxDistance && distance > 0) {
-      const force = (maxDistance - distance) / maxDistance;
-      repulseX.set((dx / distance) * force * 290); 
-      repulseY.set((dy / distance) * force * 290);
-    } else {
-      repulseX.set(0);
-      repulseY.set(0);
-    }
-  });
+    // Listen to resize and scroll to keep baseline position correct
+    window.addEventListener("resize", updateRect);
+    window.addEventListener("scroll", updateRect, { passive: true });
+
+    // Calculate repulsion only when mouse moves
+    const handleMouseChange = () => {
+      if (!rectRef.current) return;
+      const rect = rectRef.current;
+      const mx = mousePixelX.get();
+      const my = mousePixelY.get();
+
+      // Convert cached document-relative rect back to viewport-relative
+      const centerX = rect.left - window.scrollX + rect.width / 2;
+      const centerY = rect.top - window.scrollY + rect.height / 2;
+
+      const dx = centerX - mx;
+      const dy = centerY - my;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const maxDistance = 600;
+
+      if (distance < maxDistance && distance > 0) {
+        const force = (maxDistance - distance) / maxDistance;
+        const rx = (dx / distance) * force * 290;
+        const ry = (dy / distance) * force * 290;
+        repulseX.set(rx);
+        repulseY.set(ry);
+      } else {
+        // Prevent setting spring to 0 repeatedly
+        if (repulseX.get() !== 0) repulseX.set(0);
+        if (repulseY.get() !== 0) repulseY.set(0);
+      }
+    };
+
+    const unsubX = mousePixelX.on("change", handleMouseChange);
+    const unsubY = mousePixelY.on("change", handleMouseChange);
+
+    return () => {
+      window.removeEventListener("resize", updateRect);
+      window.removeEventListener("scroll", updateRect);
+      unsubX();
+      unsubY();
+    };
+  }, [mousePixelX, mousePixelY, repulseX, repulseY]);
 
   return (
     <motion.div
@@ -147,13 +186,22 @@ function FloatingTechItem({
 
 function FloatingTechOrbit() {
   const [mounted, setMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const mousePixelX = useMotionValue(-1000);
   const mousePixelY = useMotionValue(-1000);
 
   useEffect(() => {
+    const checkScreen = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    setMounted(true);
+
     const handleMouseMove = (e: MouseEvent) => {
+      if (window.innerWidth < 1024) return;
       const nx = (e.clientX / window.innerWidth) * 2 - 1;
       const ny = (e.clientY / window.innerHeight) * 2 - 1;
       mouseX.set(nx);
@@ -163,16 +211,18 @@ function FloatingTechOrbit() {
       mousePixelY.set(e.clientY);
     };
     window.addEventListener("mousemove", handleMouseMove);
-    setMounted(true);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("resize", checkScreen);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, [mouseX, mouseY, mousePixelX, mousePixelY]);
 
   const smoothX = useSpring(mouseX, { damping: 20, stiffness: 300 });
   const smoothY = useSpring(mouseY, { damping: 20, stiffness: 300 });
 
-  if (!mounted) return null;
+  if (!mounted || !isDesktop) return null;
 
-  // Reduced items to prevent lag on mobile (using just heroTechItems instead of duplicating)
   const itemsToRender = heroTechItems;
 
   return (
@@ -198,6 +248,18 @@ function FloatingTechOrbit() {
 export default function Hero() {
   const { viewMode } = useViewStore();
   const isDeveloper = viewMode === "developer";
+  const [mounted, setMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const checkScreen = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden w-full">
@@ -209,14 +271,46 @@ export default function Hero() {
           WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 20%, transparent 100%)'
         }}
       >
-        {/* Background Effects */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px]" style={{ transform: 'translateZ(0)', willChange: 'transform' }} />
-        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[120px]" style={{ transform: 'translateZ(0)', willChange: 'transform' }} />
-        <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-violet-600/10 rounded-full blur-[100px]" style={{ transform: 'translateZ(0)', willChange: 'transform' }} />
+        {/* Ambient Glowing Blobs - Animated with CSS for zero CPU overhead */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px] animate-float-blob-1" style={{ transform: 'translateZ(0)' }} />
+        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[120px] animate-float-blob-2" style={{ transform: 'translateZ(0)' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-violet-600/10 rounded-full blur-[100px] animate-float-blob-3" style={{ transform: 'translateZ(0)' }} />
+
+        {/* Diagonal Tech Beams */}
+        <div className="absolute top-0 left-[12%] w-[1px] h-full bg-gradient-to-b from-transparent via-primary/10 to-transparent opacity-60" />
+        <div className="absolute top-0 right-[25%] w-[1px] h-full bg-gradient-to-b from-transparent via-violet-500/5 to-transparent opacity-40" />
+        <div className="absolute left-0 top-[35%] w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/5 to-transparent opacity-40" />
+
+        {/* Floating Glassmorphic Rings & Decorative Orbs */}
+        {mounted && isDesktop ? (
+          <>
+            <div className="absolute top-[18%] right-[15%] w-72 h-72 animate-float-blob-1" style={{ transform: 'translateZ(0)' }}>
+              <LiquidGlass
+                distortionScale={60}
+                className="bg-white/[0.02] border border-white/5 rounded-full"
+              />
+            </div>
+            <div className="absolute bottom-[22%] left-[10%] w-96 h-96 animate-float-blob-2" style={{ transform: 'translateZ(0)' }}>
+              <LiquidGlass
+                distortionScale={70}
+                className="bg-white/[0.02] border border-white/5 rounded-full"
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="absolute top-[18%] right-[15%] w-72 h-72 rounded-full border border-white/5 bg-white/[0.01] backdrop-blur-[2px] animate-float-blob-1" style={{ transform: 'translateZ(0)' }} />
+            <div className="absolute bottom-[22%] left-[10%] w-96 h-96 rounded-full border border-white/5 bg-white/[0.01] backdrop-blur-[2px] animate-float-blob-2" style={{ transform: 'translateZ(0)' }} />
+          </>
+        )}
+        
+        {/* Slow spinning technical HUD circles */}
+        <div className="absolute top-[25%] left-[8%] w-80 h-80 rounded-full border border-dashed border-primary/10 animate-[spin_180s_linear_infinite]" style={{ transform: 'translateZ(0)' }} />
+        <div className="absolute bottom-[15%] right-[8%] w-[450px] h-[450px] rounded-full border border-dashed border-violet-500/5 animate-[spin_240s_linear_infinite_reverse]" style={{ transform: 'translateZ(0)' }} />
 
         {/* Dots pattern */}
         <div
-          className="absolute inset-0 opacity-[0.15]"
+          className="absolute inset-0 opacity-[0.12]"
           style={{
             backgroundImage: "radial-gradient(circle at center, var(--color-white) 1px, transparent 1px)",
             backgroundSize: "32px 32px",

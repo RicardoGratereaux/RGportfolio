@@ -5,9 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import GlassButton from "@/components/ui/GlassButton";
 import { Menu, X } from "lucide-react";
 
-import dynamic from 'next/dynamic';
-
-const LiquidGlass = dynamic(() => import('liquid-glass-react'), { ssr: false });
+import LiquidGlass from "@/components/ui/LiquidGlass";
 
 const navLinks = [
   { label: "Sobre Mí", href: "#about" },
@@ -44,19 +42,10 @@ export default function Navbar() {
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="absolute inset-0 pointer-events-none"
             >
-              <div className="absolute inset-0 pointer-events-none" style={{
-                WebkitMaskImage: "linear-gradient(to bottom, transparent 15%, black 85%)",
-                maskImage: "linear-gradient(to bottom, transparent 15%, black 85%)"
-              }}>
-                <LiquidGlass 
-                  className="bg-white/[0.02]" 
-                  displacementScale={120} 
-                  blurAmount={0.05}
-                  cornerRadius={0}
-                >
-                  <div className="w-screen h-16" />
-                </LiquidGlass>
-              </div>
+              <LiquidGlass 
+                className="bg-white/[0.02]" 
+                distortionScale={120} 
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -109,9 +98,7 @@ export default function Navbar() {
             className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 md:hidden"
           >
             <div className="absolute inset-0 z-[-1] pointer-events-none overflow-hidden">
-              <LiquidGlass displacementScale={80} blurAmount={0.1} cornerRadius={0} className="bg-black/50">
-                <div className="w-screen h-screen" />
-              </LiquidGlass>
+              <LiquidGlass distortionScale={80} className="bg-black/50" />
             </div>
             {navLinks.map((link, i) => (
               <motion.a

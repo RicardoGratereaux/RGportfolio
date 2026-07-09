@@ -24,7 +24,62 @@ export default function LiquidGlass({
   filterHeight = "140%",
 }: LiquidGlassProps) {
   const filterId = useId().replace(/:/g, "");
+  const [isMobile, setIsMobile] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
 
+  useEffect(() => {
+    // Detect mobile/tablet/touch
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024 || (navigator && navigator.maxTouchPoints > 0));
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    // Detect scroll to bypass filter on desktop for 60fps scrolling
+    let scrollTimeout: NodeJS.Timeout;
+    const handleScroll = () => {
+      setIsScrolling(true);
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        setIsScrolling(false);
+      }, 150);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, []);
+
+  // Standard high-performance CSS glass fallback (for mobile/touch or during scroll)
+  if (isMobile || isScrolling) {
+    return (
+      <>
+        <div
+          className={`absolute inset-0 pointer-events-none ${className}`}
+          style={{
+            backdropFilter: `blur(12px)`,
+            WebkitBackdropFilter: `blur(12px)`,
+            background: "var(--glass-liquid-bg, rgba(255, 255, 255, 0.02))",
+            WebkitMaskImage: edgeMask,
+            maskImage: edgeMask,
+          }}
+        />
+        <div
+          className={`absolute inset-0 pointer-events-none ${className}`}
+          style={{
+            border: "1px solid var(--glass-liquid-border, rgba(255, 255, 255, 0.15))",
+            boxShadow: noShadow ? "none" : "var(--glass-liquid-shadow, inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 8px 32px rgba(0, 0, 0, 0.2))",
+          }}
+        />
+      </>
+    );
+  }
+
+  // Optimized Liquid Glass for Desktop when stationary
   return (
     <>
       {/* Base Layer: Clean, highly transparent center */}
@@ -46,7 +101,6 @@ export default function LiquidGlass({
           WebkitMaskImage: edgeMask || "radial-gradient(ellipse at center, transparent 20%, black 90%)",
           maskImage: edgeMask || "radial-gradient(ellipse at center, transparent 20%, black 90%)",
           transform: "translate3d(0, 0, 0)",
-          willChange: "transform, backdrop-filter, mask-image"
         }}
       />
 
@@ -62,46 +116,22 @@ export default function LiquidGlass({
       <svg className="absolute w-0 h-0 pointer-events-none" aria-hidden="true">
         <filter id={filterId} x={filterX} y={filterY} width={filterWidth} height={filterHeight} colorInterpolationFilters="sRGB">
           <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.008"
-              numOctaves="2"
-              result="noise"
-            />
-            <feGaussianBlur in="noise" stdDeviation="2.5" result="smoothNoise" />
-            
-            {/* Chromatic Aberration */}
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="smoothNoise"
-              scale={distortionScale}
-              xChannelSelector="R"
-              yChannelSelector="G"
-              result="redMap"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="smoothNoise"
-              scale={distortionScale * 0.8}
-              xChannelSelector="R"
-              yChannelSelector="G"
-              result="greenMap"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="smoothNoise"
-              scale={distortionScale * 0.6}
-              xChannelSelector="R"
-              yChannelSelector="G"
-              result="blueMap"
-            />
-
-            <feColorMatrix in="redMap" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="R" />
-            <feColorMatrix in="greenMap" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="G" />
-            <feColorMatrix in="blueMap" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="B" />
-
-            <feComposite in="R" in2="G" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="RG" />
-            <feComposite in="RG" in2="B" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="finalRGB" />
-          </filter>
+            type="fractalNoise"
+            baseFrequency="0.008"
+            numOctaves="1"
+            result="noise"
+          />
+          <feGaussianBlur in="noise" stdDeviation="2.5" result="smoothNoise" />
+          
+          {/* Optimized Single Displacement Map (3x faster than chromatic aberration splits) */}
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="smoothNoise"
+            scale={distortionScale}
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
       </svg>
     </>
   );
