@@ -30,7 +30,7 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
           lenis.scrollTo(0);
         } else {
           try {
-            const targetElement = document.querySelector(hash);
+            const targetElement = document.querySelector(hash) as HTMLElement | null;
             if (targetElement) {
               e.preventDefault();
               lenis.scrollTo(targetElement, {
