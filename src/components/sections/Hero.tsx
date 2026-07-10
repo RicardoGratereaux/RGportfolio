@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, animate, useMotionValueEvent } from "framer-motion";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform, useMotionValueEvent, animate } from "framer-motion";
 
 import { useViewStore } from "@/store/useViewStore";
 import { FadeIn, TextReveal } from "@/components/animations/Reveal";
@@ -93,7 +93,10 @@ function TypewriterScroller() {
   }, [index, textIndex]);
 
   return (
-    <div className="relative h-[28px] flex items-center justify-center min-w-[300px]">
+    <div 
+      className="relative h-[28px] flex items-center justify-center min-w-[300px]"
+      style={{ contain: "content" }}
+    >
       <p className="text-lg md:text-xl text-primary font-mono tracking-wider uppercase inline-block m-0 leading-none">
         <span ref={textRef}></span>
         <span className="animate-pulse ml-[2px] font-bold">|</span>
@@ -102,96 +105,33 @@ function TypewriterScroller() {
   );
 }
 
+interface FloatingTechItemProps {
+  tech: any;
+  i: number;
+  itemsRef: React.MutableRefObject<(HTMLDivElement | null)[]>;
+  size: number;
+  opacity: number;
+  startX: number;
+  startY: number;
+  floatX: number;
+  floatY: number;
+  duration: number;
+  delay: number;
+}
+
 function FloatingTechItem({
   tech,
   i,
-  smoothX,
-  smoothY,
-  mousePixelX,
-  mousePixelY,
-  total,
-}: {
-  tech: any;
-  i: number;
-  smoothX: any;
-  smoothY: any;
-  mousePixelX: any;
-  mousePixelY: any;
-  total: number;
-}) {
-  const random = (seed: number) => {
-    const x = Math.sin(seed + 1) * 10000;
-    return x - Math.floor(x);
-  };
-
-  // Generate between 5% and 95% for a wide, even dispersion across the screen
-  let startX = 5 + random(i) * 90;
-  let startY = 5 + random(i + 100) * 90;
-  
-  // Wider exclusion zone for the center text to keep the main title clean
-  if (startX > 35 && startX < 65 && startY > 35 && startY < 65) {
-    startX = startX < 50 ? startX - 25 : startX + 25;
-    startY = startY < 50 ? startY - 25 : startY + 25;
-  }
-
-  const duration = 15 + random(i + 200) * 25; // Slightly varied duration for larger movement
-  const floatX = (random(i + 300) - 0.5) * 600; // Massively increased ambient travel range
-  const floatY = (random(i + 400) - 0.5) * 600;
-  const delay = random(i + 500) * 5;
-
-  const parallaxFactor = 20 + random(i + 600) * 40;
-  const parallaxX = useTransform(smoothX, (v: number) => v * parallaxFactor);
-  const parallaxY = useTransform(smoothY, (v: number) => v * parallaxFactor);
-
-  const size = 36 + random(i + 700) * 28;
-  const opacity = 0.6 + random(i + 800) * 0.4;
-
-  const baseRef = useRef<HTMLDivElement>(null);
-  
-  // Fluid, organic springs for a smooth repulsion (higher mass/damping, lower stiffness)
-  const repulseX = useSpring(0, { damping: 35, stiffness: 80, mass: 1.2 });
-  const repulseY = useSpring(0, { damping: 35, stiffness: 80, mass: 1.2 });
-
-  useEffect(() => {
-    const handleMouseChange = () => {
-      if (!baseRef.current) return;
-      
-      // Calculate true baseline position (including float/parallax, excluding repulsion)
-      const rect = baseRef.current.getBoundingClientRect();
-      const mx = mousePixelX.get();
-      const my = mousePixelY.get();
-
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      const dx = centerX - mx;
-      const dy = centerY - my;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      
-      const maxDistance = 350; // Increased radius to start moving earlier
-
-      if (distance < maxDistance && distance > 0) {
-        // Smooth easing curve
-        const force = Math.pow((maxDistance - distance) / maxDistance, 1.2);
-        const rx = (dx / distance) * force * 350; // Pushes further away
-        const ry = (dy / distance) * force * 350;
-        repulseX.set(rx);
-        repulseY.set(ry);
-      } else {
-        if (repulseX.get() !== 0) repulseX.set(0);
-        if (repulseY.get() !== 0) repulseY.set(0);
-      }
-    };
-
-    const unsubX = mousePixelX.on("change", handleMouseChange);
-    const unsubY = mousePixelY.on("change", handleMouseChange);
-
-    return () => {
-      unsubX();
-      unsubY();
-    };
-  }, [mousePixelX, mousePixelY, repulseX, repulseY]);
-
+  itemsRef,
+  size,
+  opacity,
+  startX,
+  startY,
+  floatX,
+  floatY,
+  duration,
+  delay,
+}: FloatingTechItemProps) {
   return (
     <div
       className="absolute flex items-center justify-center pointer-events-none z-0"
@@ -207,17 +147,21 @@ function FloatingTechItem({
           willChange: 'transform, opacity'
         } as any}
       >
-        <motion.div style={{ x: parallaxX, y: parallaxY }} className="relative flex items-center justify-center">
-          {/* Invisible tracking element for accurate baseline coordinates */}
-          <div ref={baseRef} className="absolute pointer-events-none" style={{ width: size, height: size }} />
-          
-          <motion.div
-            className="rounded-2xl bg-foreground/[0.03] border border-foreground/[0.08] backdrop-blur-xl flex items-center justify-center overflow-hidden pointer-events-none shadow-[0_0_15px_var(--primary-spotlight)]"
-            style={{ width: size, height: size, x: repulseX, y: repulseY }}
+        <div 
+          ref={el => { itemsRef.current[i] = el; }}
+          className="transition-transform duration-[1000ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+          style={{
+            transform: 'translate3d(calc(var(--parallax-x, 0px) + var(--repulse-x, 0px)), calc(var(--parallax-y, 0px) + var(--repulse-y, 0px)), 0)',
+            willChange: 'transform'
+          }}
+        >
+          <div
+            className="tech-card rounded-2xl bg-foreground/[0.03] border border-foreground/[0.08] flex items-center justify-center overflow-hidden pointer-events-none shadow-[0_0_15px_var(--primary-spotlight)]"
+            style={{ width: size, height: size }}
           >
             <tech.Icon className="w-3/5 h-3/5 opacity-80 drop-shadow-md" />
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -226,57 +170,176 @@ function FloatingTechItem({
 function FloatingTechOrbit() {
   const [mounted, setMounted] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const mousePixelX = useMotionValue(-1000);
-  const mousePixelY = useMotionValue(-1000);
+  const [windowWidth, setWindowWidth] = useState(1920);
+  const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Pre-calculate deterministic random layouts on mount to share with loop and items
+  const itemsData = useMemo(() => {
+    return heroTechItems.map((tech, i) => {
+      const random = (seed: number) => {
+        const x = Math.sin(seed + 1) * 10000;
+        return x - Math.floor(x);
+      };
+
+      let startX = 5 + random(i) * 90;
+      let startY = 5 + random(i + 100) * 90;
+      
+      if (startX > 35 && startX < 65 && startY > 35 && startY < 65) {
+        startX = startX < 50 ? startX - 25 : startX + 25;
+        startY = startY < 50 ? startY - 25 : startY + 25;
+      }
+
+      return {
+        tech,
+        startX,
+        startY,
+        floatX: (random(i + 300) - 0.5) * 600,
+        floatY: (random(i + 400) - 0.5) * 600,
+        parallaxFactor: 20 + random(i + 600) * 40,
+        size: 36 + random(i + 700) * 28,
+        opacity: 0.6 + random(i + 800) * 0.4,
+        duration: 15 + random(i + 200) * 25,
+        delay: random(i + 500) * 5,
+      };
+    });
+  }, []);
+
+  // Determine current active subset size depending on screen size to reduce compositor load
+  const activeItemsCount = windowWidth >= 1536 
+    ? 24 
+    : windowWidth >= 1280 
+      ? 15 
+      : 8;
+
+  const activeCountRef = useRef(activeItemsCount);
+  activeCountRef.current = activeItemsCount;
 
   useEffect(() => {
-    const checkScreen = () => {
+    const handleResize = () => {
       setIsDesktop(window.innerWidth >= 1024);
+      setWindowWidth(window.innerWidth);
     };
-    checkScreen();
-    window.addEventListener("resize", checkScreen);
+    handleResize();
+    window.addEventListener("resize", handleResize);
     setMounted(true);
+
+    let rafId: number | null = null;
+    let pendingEvent: MouseEvent | null = null;
+
+    // Single central RAF loop to update element CSS variables directly, bypassing React renders
+    const updateMouse = () => {
+      if (!pendingEvent) return;
+      const e = pendingEvent;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const nx = (e.clientX / w) * 2 - 1;
+      const ny = (e.clientY / h) * 2 - 1;
+
+      const time = Date.now() / 1000;
+
+      // Only iterate over the active sliced subset to match DOM render count
+      for (let i = 0; i < activeCountRef.current; i++) {
+        const item = itemsData[i];
+        if (!item) continue;
+        const el = itemsRef.current[i];
+        if (!el) continue;
+
+        // Parallax offset
+        const px = nx * item.parallaxFactor;
+        const py = ny * item.parallaxFactor;
+
+        // Mathematical model of the CSS ambient floating offset to determine precise repulsion centers
+        const cycle = (time + item.delay) % item.duration;
+        const progress = cycle / item.duration;
+        const fx = item.floatX * Math.sin(progress * Math.PI);
+        const fy = item.floatY * Math.sin(progress * Math.PI);
+
+        const centerX = (item.startX / 100) * w + px + fx;
+        const centerY = (item.startY / 100) * h + py + fy;
+
+        const dx = centerX - e.clientX;
+        const dy = centerY - e.clientY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        const maxDistance = 350;
+        let rx = 0;
+        let ry = 0;
+
+        const card = el.firstElementChild as HTMLElement;
+
+        if (distance < maxDistance && distance > 0) {
+          const force = Math.pow((maxDistance - distance) / maxDistance, 1.2);
+          rx = (dx / distance) * force * 350;
+          ry = (dy / distance) * force * 350;
+          
+          // Dynamically enable backdrop-blur only when close to cursor
+          if (card) card.classList.add('near-mouse');
+        } else {
+          if (card) card.classList.remove('near-mouse');
+        }
+
+        // Direct style writes avoid Framer Motion listener overhead
+        el.style.setProperty('--parallax-x', `${px}px`);
+        el.style.setProperty('--parallax-y', `${py}px`);
+        el.style.setProperty('--repulse-x', `${rx}px`);
+        el.style.setProperty('--repulse-y', `${ry}px`);
+      }
+
+      rafId = null;
+    };
 
     const handleMouseMove = (e: MouseEvent) => {
       if (window.innerWidth < 1024) return;
-      const nx = (e.clientX / window.innerWidth) * 2 - 1;
-      const ny = (e.clientY / window.innerHeight) * 2 - 1;
-      mouseX.set(nx);
-      mouseY.set(ny);
-      
-      mousePixelX.set(e.clientX);
-      mousePixelY.set(e.clientY);
+      pendingEvent = e;
+      if (rafId === null) {
+        rafId = requestAnimationFrame(updateMouse);
+      }
     };
+
+    // Clean up glass effects when mouse leaves page completely
+    const handleMouseLeave = () => {
+      for (let i = 0; i < activeCountRef.current; i++) {
+        const el = itemsRef.current[i];
+        if (!el) continue;
+        el.style.setProperty('--repulse-x', '0px');
+        el.style.setProperty('--repulse-y', '0px');
+        const card = el.firstElementChild as HTMLElement;
+        if (card) card.classList.remove('near-mouse');
+      }
+    };
+
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
-      window.removeEventListener("resize", checkScreen);
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseleave", handleMouseLeave);
+      if (rafId !== null) cancelAnimationFrame(rafId);
     };
-  }, [mouseX, mouseY, mousePixelX, mousePixelY]);
-
-  const smoothX = useSpring(mouseX, { damping: 20, stiffness: 300 });
-  const smoothY = useSpring(mouseY, { damping: 20, stiffness: 300 });
+  }, [itemsData]);
 
   if (!mounted || !isDesktop) return null;
 
-  const itemsToRender = heroTechItems;
+  const itemsToRender = itemsData.slice(0, activeItemsCount);
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
       <div className="pointer-events-auto w-full h-full">
-        {itemsToRender.map((tech, i) => (
+        {itemsToRender.map((item, i) => (
           <FloatingTechItem
-            key={`${tech.name}-${i}`}
-            tech={tech}
+            key={`${item.tech.name}-${i}`}
+            tech={item.tech}
             i={i}
-            smoothX={smoothX}
-            smoothY={smoothY}
-            mousePixelX={mousePixelX}
-            mousePixelY={mousePixelY}
-            total={itemsToRender.length}
+            itemsRef={itemsRef}
+            size={item.size}
+            opacity={item.opacity}
+            startX={item.startX}
+            startY={item.startY}
+            floatX={item.floatX}
+            floatY={item.floatY}
+            duration={item.duration}
+            delay={item.delay}
           />
         ))}
       </div>
@@ -309,9 +372,9 @@ export default function Hero() {
         <div className="absolute top-0 left-0 right-0 h-[15%] bg-gradient-to-b from-background to-transparent z-10" />
         <div className="absolute bottom-0 left-0 right-0 h-[35%] bg-gradient-to-t from-background to-transparent z-10" />
         {/* Ambient Glowing Blobs - Animated with CSS for zero CPU overhead */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px] animate-float-blob-1" style={{ transform: 'translateZ(0)' }} />
-        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[120px] animate-float-blob-2" style={{ transform: 'translateZ(0)' }} />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] animate-float-blob-3" style={{ transform: 'translateZ(0)' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px] animate-float-blob-1" />
+        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[120px] animate-float-blob-2" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] animate-float-blob-3" />
 
         {/* Diagonal Tech Beams */}
         <div className="absolute top-0 left-[12%] w-[1px] h-full bg-gradient-to-b from-transparent via-primary/10 to-transparent opacity-60" />
@@ -321,13 +384,13 @@ export default function Hero() {
         {/* Floating Glassmorphic Rings & Decorative Orbs */}
         {mounted && isDesktop ? (
           <>
-            <div className="absolute top-[18%] right-[15%] w-72 h-72 animate-float-blob-1" style={{ transform: 'translateZ(0)' }}>
+            <div className="absolute top-[18%] right-[15%] w-72 h-72 animate-float-blob-1">
               <LiquidGlass
                 distortionScale={60}
                 className="bg-white/[0.02] border border-white/5 rounded-full"
               />
             </div>
-            <div className="absolute bottom-[22%] left-[10%] w-96 h-96 animate-float-blob-2" style={{ transform: 'translateZ(0)' }}>
+            <div className="absolute bottom-[22%] left-[10%] w-96 h-96 animate-float-blob-2">
               <LiquidGlass
                 distortionScale={70}
                 className="bg-white/[0.02] border border-white/5 rounded-full"
@@ -336,16 +399,16 @@ export default function Hero() {
           </>
         ) : (
           <>
-            <div className="absolute top-[18%] right-[15%] w-72 h-72 rounded-full border border-white/5 bg-white/[0.01] backdrop-blur-[2px] animate-float-blob-1" style={{ transform: 'translateZ(0)' }} />
-            <div className="absolute bottom-[22%] left-[10%] w-96 h-96 rounded-full border border-white/5 bg-white/[0.01] backdrop-blur-[2px] animate-float-blob-2" style={{ transform: 'translateZ(0)' }} />
+            <div className="absolute top-[18%] right-[15%] w-72 h-72 rounded-full border border-white/5 bg-white/[0.01] backdrop-blur-[2px] animate-float-blob-1" />
+            <div className="absolute bottom-[22%] left-[10%] w-96 h-96 rounded-full border border-white/5 bg-white/[0.01] backdrop-blur-[2px] animate-float-blob-2" />
           </>
         )}
         
         {/* Spinning technical HUD circles (Optimized with SVG to prevent Chromium border-dashed rasterization bug) */}
-        <svg className="absolute top-[25%] left-[8%] w-80 h-80 animate-spin" style={{ animationDuration: '90s' }} viewBox="0 0 320 320">
+        <svg className="absolute top-[25%] left-[8%] w-80 h-80 animate-spin" style={{ animationDuration: '90s', willChange: 'transform' }} viewBox="0 0 320 320">
           <circle cx="160" cy="160" r="159" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="8 8" className="text-primary/30" />
         </svg>
-        <svg className="absolute bottom-[15%] right-[8%] w-[450px] h-[450px] animate-spin" style={{ animationDuration: '120s', animationDirection: 'reverse' }} viewBox="0 0 450 450">
+        <svg className="absolute bottom-[15%] right-[8%] w-[450px] h-[450px] animate-spin" style={{ animationDuration: '120s', animationDirection: 'reverse', willChange: 'transform' }} viewBox="0 0 450 450">
           <circle cx="225" cy="225" r="224" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="6 6" className="text-primary/20" />
         </svg>
 
@@ -399,6 +462,17 @@ export default function Hero() {
           <MagneticButton>
             <a
               href="#projects"
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.querySelector("#projects");
+                if (target) {
+                  if ((window as any).portfolioLenis) {
+                    (window as any).portfolioLenis.scrollTo(target, { offset: -40 });
+                  } else {
+                    target.scrollIntoView({ behavior: "smooth" });
+                  }
+                }
+              }}
               className="group flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full font-medium hover:bg-primary/90 transition-all shadow-[0_0_30px_var(--primary-glow)] hover:shadow-[0_0_50px_var(--primary-glow-hover)]"
             >
               Ver Proyectos

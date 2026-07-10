@@ -113,14 +113,41 @@ body {
 
   .animate-float-blob-1 {
     animation: float-slow-1 25s infinite ease-in-out;
+    will-change: transform;
   }
 
   .animate-float-blob-2 {
     animation: float-slow-2 30s infinite ease-in-out;
+    will-change: transform;
   }
 
   .animate-float-blob-3 {
     animation: float-slow-1 22s infinite ease-in-out reverse;
+    will-change: transform;
+  }
+
+  @keyframes typing-css {
+    0% { width: 0; }
+    35% { width: calc(var(--char-count) * (1ch + 0.05em)); }
+    85% { width: calc(var(--char-count) * (1ch + 0.05em)); }
+    95% { width: 0; }
+    100% { width: 0; }
+  }
+
+  @keyframes blink-css {
+    from, to { border-color: transparent }
+    50% { border-color: var(--primary); }
+  }
+
+  .tech-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transition: backdrop-filter 0.4s ease, -webkit-backdrop-filter 0.4s ease;
+  }
+
+  .tech-card.near-mouse {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
 }
 
