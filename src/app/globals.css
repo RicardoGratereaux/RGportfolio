@@ -99,16 +99,29 @@ body {
   }
 }
 
-.animate-float-blob-1 {
-  animation: float-slow-1 25s infinite ease-in-out;
-}
+@layer utilities {
+  @keyframes ambient-float {
+    0%, 100% {
+      transform: translate3d(0, 0, 0);
+      opacity: var(--op-min, 0.5);
+    }
+    50% {
+      transform: translate3d(var(--float-x, 0), var(--float-y, 0), 0);
+      opacity: var(--op-max, 1);
+    }
+  }
 
-.animate-float-blob-2 {
-  animation: float-slow-2 30s infinite ease-in-out;
-}
+  .animate-float-blob-1 {
+    animation: float-slow-1 25s infinite ease-in-out;
+  }
 
-.animate-float-blob-3 {
-  animation: float-slow-1 22s infinite ease-in-out reverse;
+  .animate-float-blob-2 {
+    animation: float-slow-2 30s infinite ease-in-out;
+  }
+
+  .animate-float-blob-3 {
+    animation: float-slow-1 22s infinite ease-in-out reverse;
+  }
 }
 
 /* 

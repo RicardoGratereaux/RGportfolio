@@ -193,29 +193,33 @@ function FloatingTechItem({
   }, [mousePixelX, mousePixelY, repulseX, repulseY]);
 
   return (
-    <motion.div
+    <div
       className="absolute flex items-center justify-center pointer-events-none z-0"
       style={{ left: `${startX}%`, top: `${startY}%` }}
-      initial={{ opacity: 0 }}
-      animate={{
-        opacity: [opacity * 0.7, opacity, opacity * 0.7],
-        x: [0, floatX, 0],
-        y: [0, floatY, 0],
-      }}
-      transition={{ duration, repeat: Infinity, delay, ease: "easeInOut" }}
     >
-      <motion.div style={{ x: parallaxX, y: parallaxY }} className="relative flex items-center justify-center">
-        {/* Invisible tracking element for accurate baseline coordinates */}
-        <div ref={baseRef} className="absolute pointer-events-none" style={{ width: size, height: size }} />
-        
-        <motion.div
-          className="rounded-2xl bg-foreground/[0.03] border border-foreground/[0.08] backdrop-blur-xl flex items-center justify-center overflow-hidden pointer-events-none shadow-[0_0_15px_var(--primary-spotlight)]"
-          style={{ width: size, height: size, x: repulseX, y: repulseY }}
-        >
-          <tech.Icon className="w-3/5 h-3/5 opacity-80 drop-shadow-md" />
+      <div 
+        style={{
+          '--float-x': `${floatX}px`,
+          '--float-y': `${floatY}px`,
+          '--op-min': opacity * 0.7,
+          '--op-max': opacity,
+          animation: `ambient-float ${duration}s ease-in-out ${delay}s infinite`,
+          willChange: 'transform, opacity'
+        } as any}
+      >
+        <motion.div style={{ x: parallaxX, y: parallaxY }} className="relative flex items-center justify-center">
+          {/* Invisible tracking element for accurate baseline coordinates */}
+          <div ref={baseRef} className="absolute pointer-events-none" style={{ width: size, height: size }} />
+          
+          <motion.div
+            className="rounded-2xl bg-foreground/[0.03] border border-foreground/[0.08] backdrop-blur-xl flex items-center justify-center overflow-hidden pointer-events-none shadow-[0_0_15px_var(--primary-spotlight)]"
+            style={{ width: size, height: size, x: repulseX, y: repulseY }}
+          >
+            <tech.Icon className="w-3/5 h-3/5 opacity-80 drop-shadow-md" />
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
 
@@ -298,14 +302,12 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-clip w-full">
-      {/* Background Wrapper with Fade-Out at Top and a very long Fade-Out at Bottom */}
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{
-          maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 50%, transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 50%, transparent 100%)'
-        }}
-      >
+      {/* Background Wrapper (Removed GPU-melting mask-image) */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        
+        {/* Fade overlays to replace mask-image without killing mobile GPU */}
+        <div className="absolute top-0 left-0 right-0 h-[15%] bg-gradient-to-b from-background to-transparent z-10" />
+        <div className="absolute bottom-0 left-0 right-0 h-[35%] bg-gradient-to-t from-background to-transparent z-10" />
         {/* Ambient Glowing Blobs - Animated with CSS for zero CPU overhead */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px] animate-float-blob-1" style={{ transform: 'translateZ(0)' }} />
         <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[120px] animate-float-blob-2" style={{ transform: 'translateZ(0)' }} />
@@ -339,18 +341,26 @@ export default function Hero() {
           </>
         )}
         
-        {/* Spinning technical HUD circles */}
-        <div className="absolute top-[25%] left-[8%] w-80 h-80 rounded-full border-2 border-dashed border-primary/30 animate-spin" style={{ animationDuration: '90s' }} />
-        <div className="absolute bottom-[15%] right-[8%] w-[450px] h-[450px] rounded-full border border-dashed border-primary/20 animate-spin" style={{ animationDuration: '120s', animationDirection: 'reverse' }} />
+        {/* Spinning technical HUD circles (Optimized with SVG to prevent Chromium border-dashed rasterization bug) */}
+        <svg className="absolute top-[25%] left-[8%] w-80 h-80 animate-spin" style={{ animationDuration: '90s' }} viewBox="0 0 320 320">
+          <circle cx="160" cy="160" r="159" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="8 8" className="text-primary/30" />
+        </svg>
+        <svg className="absolute bottom-[15%] right-[8%] w-[450px] h-[450px] animate-spin" style={{ animationDuration: '120s', animationDirection: 'reverse' }} viewBox="0 0 450 450">
+          <circle cx="225" cy="225" r="224" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="6 6" className="text-primary/20" />
+        </svg>
 
-        {/* Dots pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.12]"
-          style={{
-            backgroundImage: "radial-gradient(circle at center, var(--color-white) 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-          }}
-        />
+        {/* Dots pattern (Optimized with SVG Pattern for native GPU tiling and 0 shader overhead) */}
+        <svg 
+          className="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none" 
+          style={{ transform: "translateZ(0)", willChange: "transform" }}
+        >
+          <defs>
+            <pattern id="dotPattern" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+              <circle cx="16" cy="16" r="1" fill="var(--color-white)" />
+            </pattern>
+          </defs>
+          <rect x="0" y="0" width="100%" height="100%" fill="url(#dotPattern)" />
+        </svg>
 
         {/* Floating interactive background */}
         <FloatingTechOrbit />
