@@ -44,7 +44,7 @@ export default function FeaturedProject() {
             <div>
               <p className="text-primary font-mono text-sm mb-3 tracking-wider uppercase">Case Study</p>
               <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
-                Proyecto <span className={isDeveloper ? "bg-gradient-to-r from-primary to-violet-400 bg-clip-text text-transparent" : "bg-gradient-to-r from-primary to-sky-400 bg-clip-text text-transparent"}>Destacado</span>
+                Proyecto <span className="bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">Destacado</span>
               </h2>
             </div>
             <div className="h-px bg-gradient-to-r from-white/10 to-transparent flex-1 ml-4 hidden md:block" />

@@ -23,7 +23,7 @@ export default function ViewToggle() {
       <button
         onClick={() => !isDeveloper && toggleViewMode()}
         className={`relative flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-full transition-colors duration-500 z-10 outline-none ${
-          isDeveloper ? "text-white" : "text-zinc-400 hover:text-zinc-200"
+          isDeveloper ? "text-primary-foreground" : "text-zinc-400 hover:text-zinc-200"
         }`}
       >
         <Code2 className="w-4 h-4" />
@@ -32,7 +32,7 @@ export default function ViewToggle() {
       <button
         onClick={() => isDeveloper && toggleViewMode()}
         className={`relative flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-full transition-colors duration-500 z-10 outline-none ${
-          !isDeveloper ? "text-white" : "text-zinc-400 hover:text-zinc-200"
+          !isDeveloper ? "text-primary-foreground" : "text-zinc-400 hover:text-zinc-200"
         }`}
       >
         <Briefcase className="w-4 h-4" />

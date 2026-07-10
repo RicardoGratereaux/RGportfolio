@@ -155,7 +155,7 @@ export default function Stack() {
             <div>
               <p className="text-primary font-mono text-sm mb-3 tracking-wider uppercase">Tecnologías</p>
               <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
-                Stack <span className={isDeveloper ? "bg-gradient-to-r from-primary to-violet-400 bg-clip-text text-transparent" : "bg-gradient-to-r from-primary to-sky-400 bg-clip-text text-transparent"}>Principal</span>
+                Stack <span className="bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">Principal</span>
               </h2>
             </div>
             <p className="text-zinc-400 max-w-md text-sm md:text-base leading-relaxed">

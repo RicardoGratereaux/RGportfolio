@@ -35,7 +35,8 @@ export const CSharpIcon = ({
   if (flipHorizontal) transforms.push("scaleX(-1)");
   if (flipVertical) transforms.push("scaleY(-1)");
 
-  const viewBoxSize = 24 + padding * 2;
+  const baseSize = 256;
+  const viewBoxSize = baseSize + padding * 2;
   const viewBoxOffset = -padding;
   const viewBox = `${viewBoxOffset} ${viewBoxOffset} ${viewBoxSize} ${viewBoxSize}`;
 

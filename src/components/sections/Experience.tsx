@@ -60,7 +60,7 @@ export default function Experience() {
         <FadeIn>
           <p className="text-primary font-mono text-sm mb-3 tracking-wider uppercase">Trayectoria</p>
           <h2 className="text-4xl md:text-6xl font-bold mb-10 md:mb-16 tracking-tight">
-            <span className={isDeveloper ? "bg-gradient-to-r from-primary to-violet-400 bg-clip-text text-transparent" : "bg-gradient-to-r from-primary to-sky-400 bg-clip-text text-transparent"}>Experiencia</span> Profesional
+            <span className="bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">Experiencia</span> Profesional
           </h2>
         </FadeIn>
 

@@ -126,7 +126,7 @@ export default function InteractiveTerminal() {
                   <div key={i} className="flex flex-col gap-1">
                     <div className="flex items-center gap-2 text-zinc-300">
                       <span className="text-green-400">➜</span>
-                      <span className="text-blue-400">~</span>
+                      <span className="text-primary">~</span>
                       <span>{cmd.input}</span>
                     </div>
                     <div className="text-zinc-300 ml-5 leading-relaxed">{cmd.output}</div>
@@ -137,7 +137,7 @@ export default function InteractiveTerminal() {
               {/* Input */}
               <form onSubmit={onSubmit} className="flex items-center gap-2 mt-3 text-zinc-300">
                 <span className="text-green-400">➜</span>
-                <span className="text-blue-400">~</span>
+                <span className="text-primary">~</span>
                 <input
                   ref={inputRef}
                   type="text"

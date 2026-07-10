@@ -14,43 +14,59 @@ html {
   /* scroll-behavior: smooth; Removed to avoid conflicts with Lenis */
 }
 
-/* Dark mode by default for premium feel */
-:root {
-  --background: #09090b; /* zinc-950 */
-  --foreground: #fafafa; /* zinc-50 */
+/* Dark mode by default for premium feel (Molten Amber on Onyx Black) */
+:root, .theme-developer {
+  --background: #0a0a0a; /* Pitch black */
+  --foreground: #fafafa; /* Pure off-white */
   
-  /* Medium Dark Violet */
-  --primary: #7c3aed; 
-  --primary-foreground: #ffffff;
-  --primary-glow: color-mix(in srgb, var(--primary) 40%, transparent);
-  --primary-glow-hover: color-mix(in srgb, var(--primary) 60%, transparent);
-  --primary-spotlight: color-mix(in srgb, var(--primary) 15%, transparent);
+  /* Molten Amber / Cyber Gold (Luxurious & Premium) */
+  --primary: #ff9d00; 
+  --primary-foreground: #000000;
+  
+  /* Explicit Tailwind mappings */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --primary-glow: rgba(255, 157, 0, 0.4);
+  --primary-glow-hover: rgba(255, 157, 0, 0.6);
+  --primary-spotlight: rgba(255, 157, 0, 0.15);
 }
 
 .theme-recruiter {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  /* Elegant Light Theme: Swiss Editorial (Alabaster & Charcoal) */
+  --background: #f9f9f8; /* Very subtle warm paper white */
+  --foreground: #171717; /* Rich charcoal, softer than pure black */
   
-  --primary: #0ea5e9; /* Electric Blue */
+  --primary: #0a0a0a; /* Deepest onyx for accents */
+  --primary-foreground: #ffffff; 
+  
+  /* Explicit Tailwind mappings */
   --color-primary: var(--primary);
-  --primary-glow: color-mix(in srgb, #0ea5e9 40%, transparent);
-  --primary-glow-hover: color-mix(in srgb, #0ea5e9 60%, transparent);
-  --primary-spotlight: color-mix(in srgb, #0ea5e9 15%, transparent);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --primary-glow: rgba(10, 10, 10, 0.12);
+  --primary-glow-hover: rgba(10, 10, 10, 0.22);
+  --primary-spotlight: rgba(10, 10, 10, 0.06);
   
-  --color-zinc-950: #f8fafc;
-  --color-zinc-900: #f1f5f9;
-  --color-zinc-800: #e2e8f0;
-  --color-zinc-700: #cbd5e1;
-  --color-zinc-600: #94a3b8;
-  --color-zinc-500: #64748b;
-  --color-zinc-400: #475569;
-  --color-zinc-300: #334155;
-  --color-zinc-200: #1e293b;
-  --color-zinc-100: #0f172a;
-  --color-zinc-50:  #020617;
+  /* Inverted Neutral Scale for automatic dark->light mapping */
+  --color-zinc-950: #ffffff;
+  --color-zinc-900: #f4f4f5;
+  --color-zinc-800: #e4e4e7;
+  --color-zinc-700: #d4d4d8;
+  --color-zinc-600: #a1a1aa;
+  --color-zinc-500: #71717a;
+  --color-zinc-400: #52525b;
+  --color-zinc-300: #3f3f46;
+  --color-zinc-200: #27272a;
+  --color-zinc-100: #18181b;
+  --color-zinc-50:  #09090b;
   
-  --color-white: #0f172a;
-  --color-black: #ffffff;
+  --color-white: #09090b; /* Inverted */
+  --color-black: #ffffff; /* Inverted */
 }
 
 body {
@@ -95,4 +111,47 @@ body {
   animation: float-slow-1 22s infinite ease-in-out reverse;
 }
 
+/* 
+==========================================================================
+MODERN SCROLL-DRIVEN ANIMATIONS (Native CSS - Zero JS Overhead)
+Tied directly to the scrollbar for physical scrubbing.
+========================================================================== 
+*/
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes sda-fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    @keyframes sda-text-reveal {
+      from {
+        opacity: 0;
+        transform: translateY(100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
+    .sda-fade-in {
+      animation: sda-fade-in linear both;
+      animation-timeline: view();
+      /* Starts fading when element is 5% in, finishes when 30% in */
+      animation-range: entry 5% cover 30%; 
+    }
+
+    .sda-text-reveal {
+      animation: sda-text-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 25%;
+    }
+  }
+}

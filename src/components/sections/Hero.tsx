@@ -7,7 +7,7 @@ import { useViewStore } from "@/store/useViewStore";
 import { FadeIn, TextReveal } from "@/components/animations/Reveal";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { ArrowRight, Download } from "lucide-react";
-import { GitHubIcon, LinkedInIcon, NextjsIcon, ReactIcon, TypeScriptIcon, TailwindIcon, NodejsIcon, PrismaIcon, PostgreSQLIcon, StripeIcon, FramerMotionIcon, JavaScriptIcon, HTML5Icon, CSS3Icon, GitIcon, VercelIcon, PythonIcon, CSharpIcon, DotNetIcon, ZodIcon, ESLintIcon, VSCodeIcon } from "@/components/icons/TechIcons";
+import { GitHubIcon, LinkedInIcon, NextjsIcon, ReactIcon, TypeScriptIcon, TailwindIcon, NodejsIcon, PrismaIcon, PostgreSQLIcon, StripeIcon, FramerMotionIcon, JavaScriptIcon, HTML5Icon, CSS3Icon, GitIcon, VercelIcon, PythonIcon, CSharpIcon, DotNetIcon, ZodIcon, ESLintIcon, VSCodeIcon, BcryptIcon, LenisIcon, NextAuthIcon, PnpmIcon, ResendIcon, RestAPIIcon, SEOIcon, SQLServerIcon, VercelBlobIcon, VitestIcon } from "@/components/icons/TechIcons";
 
 const heroTechItems = [
   { name: "Next.js", Icon: NextjsIcon },
@@ -30,6 +30,16 @@ const heroTechItems = [
   { name: "Zod", Icon: ZodIcon },
   { name: "ESLint", Icon: ESLintIcon },
   { name: "VS Code", Icon: VSCodeIcon },
+  { name: "Bcrypt", Icon: BcryptIcon },
+  { name: "Lenis", Icon: LenisIcon },
+  { name: "NextAuth", Icon: NextAuthIcon },
+  { name: "Pnpm", Icon: PnpmIcon },
+  { name: "Resend", Icon: ResendIcon },
+  { name: "Rest API", Icon: RestAPIIcon },
+  { name: "SEO", Icon: SEOIcon },
+  { name: "SQL Server", Icon: SQLServerIcon },
+  { name: "Vercel Blob", Icon: VercelBlobIcon },
+  { name: "Vitest", Icon: VitestIcon },
 ];
 import GlassButton from "@/components/ui/GlassButton";
 import { TypeAnimation } from 'react-type-animation';
@@ -57,77 +67,60 @@ function FloatingTechItem({
     return x - Math.floor(x);
   };
 
-  let startX = random(i) * 100;
-  let startY = random(i + 100) * 100;
+  // Generate between 5% and 95% for a wide, even dispersion across the screen
+  let startX = 5 + random(i) * 90;
+  let startY = 5 + random(i + 100) * 90;
   
-  // Allow them slightly closer to center
+  // Wider exclusion zone for the center text to keep the main title clean
   if (startX > 35 && startX < 65 && startY > 35 && startY < 65) {
-    startX = startX < 50 ? startX - 20 : startX + 20;
-    startY = startY < 50 ? startY - 20 : startY + 20;
+    startX = startX < 50 ? startX - 25 : startX + 25;
+    startY = startY < 50 ? startY - 25 : startY + 25;
   }
 
-  const duration = 10 + random(i + 200) * 15;
-  const floatX = (random(i + 300) - 0.5) * 180;
-  const floatY = (random(i + 400) - 0.5) * 180;
+  const duration = 15 + random(i + 200) * 25; // Slightly varied duration for larger movement
+  const floatX = (random(i + 300) - 0.5) * 600; // Massively increased ambient travel range
+  const floatY = (random(i + 400) - 0.5) * 600;
   const delay = random(i + 500) * 5;
 
   const parallaxFactor = 20 + random(i + 600) * 40;
   const parallaxX = useTransform(smoothX, (v: number) => v * parallaxFactor);
   const parallaxY = useTransform(smoothY, (v: number) => v * parallaxFactor);
 
-  const size = 32 + random(i + 700) * 32;
-  const opacity = 0.4 + random(i + 800) * 0.4; // Increased visibility
+  const size = 36 + random(i + 700) * 28;
+  const opacity = 0.6 + random(i + 800) * 0.4;
 
-  const ref = useRef<HTMLDivElement>(null);
-  const rectRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null);
-  const repulseX = useSpring(0, { damping: 25, stiffness: 90, mass: 1.2 });
-  const repulseY = useSpring(0, { damping: 25, stiffness: 90, mass: 1.2 });
+  const baseRef = useRef<HTMLDivElement>(null);
+  
+  // Fluid, organic springs for a smooth repulsion (higher mass/damping, lower stiffness)
+  const repulseX = useSpring(0, { damping: 35, stiffness: 80, mass: 1.2 });
+  const repulseY = useSpring(0, { damping: 35, stiffness: 80, mass: 1.2 });
 
   useEffect(() => {
-    const updateRect = () => {
-      if (ref.current) {
-        const rect = ref.current.getBoundingClientRect();
-        rectRef.current = {
-          // Adjust for any current repulsion offset to get the clean baseline coordinates
-          left: rect.left + window.scrollX - repulseX.get(),
-          top: rect.top + window.scrollY - repulseY.get(),
-          width: rect.width,
-          height: rect.height,
-        };
-      }
-    };
-
-    // Calculate initial positions
-    updateRect();
-
-    // Listen to resize and scroll to keep baseline position correct
-    window.addEventListener("resize", updateRect);
-    window.addEventListener("scroll", updateRect, { passive: true });
-
-    // Calculate repulsion only when mouse moves
     const handleMouseChange = () => {
-      if (!rectRef.current) return;
-      const rect = rectRef.current;
+      if (!baseRef.current) return;
+      
+      // Calculate true baseline position (including float/parallax, excluding repulsion)
+      const rect = baseRef.current.getBoundingClientRect();
       const mx = mousePixelX.get();
       const my = mousePixelY.get();
 
-      // Convert cached document-relative rect back to viewport-relative
-      const centerX = rect.left - window.scrollX + rect.width / 2;
-      const centerY = rect.top - window.scrollY + rect.height / 2;
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
 
       const dx = centerX - mx;
       const dy = centerY - my;
       const distance = Math.sqrt(dx * dx + dy * dy);
-      const maxDistance = 600;
+      
+      const maxDistance = 350; // Increased radius to start moving earlier
 
       if (distance < maxDistance && distance > 0) {
-        const force = (maxDistance - distance) / maxDistance;
-        const rx = (dx / distance) * force * 290;
-        const ry = (dy / distance) * force * 290;
+        // Smooth easing curve
+        const force = Math.pow((maxDistance - distance) / maxDistance, 1.2);
+        const rx = (dx / distance) * force * 350; // Pushes further away
+        const ry = (dy / distance) * force * 350;
         repulseX.set(rx);
         repulseY.set(ry);
       } else {
-        // Prevent setting spring to 0 repeatedly
         if (repulseX.get() !== 0) repulseX.set(0);
         if (repulseY.get() !== 0) repulseY.set(0);
       }
@@ -137,8 +130,6 @@ function FloatingTechItem({
     const unsubY = mousePixelY.on("change", handleMouseChange);
 
     return () => {
-      window.removeEventListener("resize", updateRect);
-      window.removeEventListener("scroll", updateRect);
       unsubX();
       unsubY();
     };
@@ -146,38 +137,25 @@ function FloatingTechItem({
 
   return (
     <motion.div
-      className="absolute flex items-center justify-center pointer-events-none"
-      style={{
-        left: `${startX}%`,
-        top: `${startY}%`,
-      }}
+      className="absolute flex items-center justify-center pointer-events-none z-0"
+      style={{ left: `${startX}%`, top: `${startY}%` }}
       initial={{ opacity: 0 }}
       animate={{
         opacity: [opacity * 0.7, opacity, opacity * 0.7],
         x: [0, floatX, 0],
         y: [0, floatY, 0],
       }}
-      transition={{
-        duration,
-        repeat: Infinity,
-        delay,
-        ease: "easeInOut",
-      }}
+      transition={{ duration, repeat: Infinity, delay, ease: "easeInOut" }}
     >
-      <motion.div style={{ x: parallaxX, y: parallaxY }}>
+      <motion.div style={{ x: parallaxX, y: parallaxY }} className="relative flex items-center justify-center">
+        {/* Invisible tracking element for accurate baseline coordinates */}
+        <div ref={baseRef} className="absolute pointer-events-none" style={{ width: size, height: size }} />
+        
         <motion.div
-          ref={ref}
-          className="rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl flex items-center justify-center overflow-hidden pointer-events-auto"
-          style={{
-            width: size,
-            height: size,
-            x: repulseX,
-            y: repulseY,
-          }}
-          whileHover={{ scale: 1.1, rotate: 5 }}
+          className="rounded-2xl bg-foreground/[0.03] border border-foreground/[0.08] backdrop-blur-xl flex items-center justify-center overflow-hidden pointer-events-none shadow-[0_0_15px_var(--primary-spotlight)]"
+          style={{ width: size, height: size, x: repulseX, y: repulseY }}
         >
-          <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity" />
-          <tech.Icon className="w-1/2 h-1/2 opacity-70 hover:opacity-100 transition-opacity" />
+          <tech.Icon className="w-3/5 h-3/5 opacity-80 drop-shadow-md" />
         </motion.div>
       </motion.div>
     </motion.div>
@@ -262,24 +240,24 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden w-full">
-      {/* Background Wrapper with Fade-Out at Bottom */}
+    <section className="relative min-h-screen flex items-center justify-center pt-20 overflow-clip w-full">
+      {/* Background Wrapper with Fade-Out at Top and a very long Fade-Out at Bottom */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none"
         style={{
-          maskImage: 'linear-gradient(to bottom, black 0%, black 20%, transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 20%, transparent 100%)'
+          maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 50%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 50%, transparent 100%)'
         }}
       >
         {/* Ambient Glowing Blobs - Animated with CSS for zero CPU overhead */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/15 rounded-full blur-[150px] animate-float-blob-1" style={{ transform: 'translateZ(0)' }} />
-        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[120px] animate-float-blob-2" style={{ transform: 'translateZ(0)' }} />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-violet-600/10 rounded-full blur-[100px] animate-float-blob-3" style={{ transform: 'translateZ(0)' }} />
+        <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[120px] animate-float-blob-2" style={{ transform: 'translateZ(0)' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] animate-float-blob-3" style={{ transform: 'translateZ(0)' }} />
 
         {/* Diagonal Tech Beams */}
         <div className="absolute top-0 left-[12%] w-[1px] h-full bg-gradient-to-b from-transparent via-primary/10 to-transparent opacity-60" />
-        <div className="absolute top-0 right-[25%] w-[1px] h-full bg-gradient-to-b from-transparent via-violet-500/5 to-transparent opacity-40" />
-        <div className="absolute left-0 top-[35%] w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/5 to-transparent opacity-40" />
+        <div className="absolute top-0 right-[25%] w-[1px] h-full bg-gradient-to-b from-transparent via-primary/5 to-transparent opacity-40" />
+        <div className="absolute left-0 top-[35%] w-full h-[1px] bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-40" />
 
         {/* Floating Glassmorphic Rings & Decorative Orbs */}
         {mounted && isDesktop ? (
@@ -304,9 +282,9 @@ export default function Hero() {
           </>
         )}
         
-        {/* Slow spinning technical HUD circles */}
-        <div className="absolute top-[25%] left-[8%] w-80 h-80 rounded-full border border-dashed border-primary/10 animate-[spin_180s_linear_infinite]" style={{ transform: 'translateZ(0)' }} />
-        <div className="absolute bottom-[15%] right-[8%] w-[450px] h-[450px] rounded-full border border-dashed border-violet-500/5 animate-[spin_240s_linear_infinite_reverse]" style={{ transform: 'translateZ(0)' }} />
+        {/* Spinning technical HUD circles */}
+        <div className="absolute top-[25%] left-[8%] w-80 h-80 rounded-full border-2 border-dashed border-primary/30 animate-spin" style={{ animationDuration: '90s' }} />
+        <div className="absolute bottom-[15%] right-[8%] w-[450px] h-[450px] rounded-full border border-dashed border-primary/20 animate-spin" style={{ animationDuration: '120s', animationDirection: 'reverse' }} />
 
         {/* Dots pattern */}
         <div
@@ -328,7 +306,7 @@ export default function Hero() {
           <TextReveal delay={0.2} className="bg-gradient-to-b from-white to-zinc-400 bg-clip-text text-transparent pb-2 pr-4">
             Ricardo
           </TextReveal>
-          <TextReveal delay={0.35} className={`pb-2 pr-4 bg-clip-text text-transparent ${isDeveloper ? 'bg-gradient-to-r from-primary via-violet-300 to-primary' : 'bg-gradient-to-r from-primary via-sky-300 to-primary'}`}>
+          <TextReveal delay={0.35} className="pb-2 pr-4 bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/50 to-primary">
             Gratereaux
           </TextReveal> 
         </h1>
@@ -371,7 +349,7 @@ export default function Hero() {
           <MagneticButton>
             <a
               href="#projects"
-              className="group flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-all shadow-[0_0_30px_var(--primary-glow)] hover:shadow-[0_0_50px_var(--primary-glow-hover)]"
+              className="group flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-full font-medium hover:bg-primary/90 transition-all shadow-[0_0_30px_var(--primary-glow)] hover:shadow-[0_0_50px_var(--primary-glow-hover)]"
             >
               Ver Proyectos
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

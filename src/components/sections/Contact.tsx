@@ -18,7 +18,7 @@ export default function Contact() {
           <div className="text-center mb-12 md:mb-20">
             <p className="text-primary font-mono text-sm mb-3 tracking-wider uppercase">Contacto</p>
             <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-              Ponte en <span className={isDeveloper ? "bg-gradient-to-r from-primary to-violet-400 bg-clip-text text-transparent" : "bg-gradient-to-r from-primary to-sky-400 bg-clip-text text-transparent"}>Contacto</span>
+              Ponte en <span className="bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">Contacto</span>
             </h2>
             <p className="text-zinc-400 max-w-xl mx-auto leading-relaxed">
               ¿Tienes un proyecto en mente o buscas un desarrollador Full Stack para tu equipo?
