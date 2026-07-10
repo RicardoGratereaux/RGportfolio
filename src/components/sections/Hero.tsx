@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence, animate, useMotionValueEvent } from "framer-motion";
 
 import { useViewStore } from "@/store/useViewStore";
 import { FadeIn, TextReveal } from "@/components/animations/Reveal";
@@ -42,8 +42,65 @@ const heroTechItems = [
   { name: "Vitest", Icon: VitestIcon },
 ];
 import GlassButton from "@/components/ui/GlassButton";
-import { TypeAnimation } from 'react-type-animation';
 import LiquidGlass from "@/components/ui/LiquidGlass";
+
+const HERO_ROLES = [
+  'Full Stack Software Developer',
+  'Especialista en React & Next.js',
+  'Arquitectura .NET & Node.js',
+  'Apasionado por la UI/UX',
+];
+
+function TypewriterScroller() {
+  const [index, setIndex] = useState(0);
+  const textIndex = useMotionValue(0);
+  const textRef = useRef<HTMLSpanElement>(null);
+  
+  const displayText = useTransform(textIndex, (latest) => HERO_ROLES[index].slice(0, Math.round(latest)));
+
+  // Safely update the DOM without passing objects as React children
+  useMotionValueEvent(displayText, "change", (latest) => {
+    if (textRef.current) {
+      textRef.current.textContent = latest;
+    }
+  });
+
+  useEffect(() => {
+    // Reset to 0 when index changes
+    textIndex.set(0);
+    
+    // Type out forward
+    const controls = animate(textIndex, HERO_ROLES[index].length, {
+      type: "tween",
+      duration: HERO_ROLES[index].length * 0.05, // 50ms per char
+      ease: "linear",
+      onComplete: () => {
+        // Wait 2 seconds, then delete fast
+        setTimeout(() => {
+          animate(textIndex, 0, {
+            type: "tween",
+            duration: HERO_ROLES[index].length * 0.02, // 20ms per char deletion
+            ease: "linear",
+            onComplete: () => {
+              setIndex((prev) => (prev + 1) % HERO_ROLES.length);
+            }
+          });
+        }, 2000); 
+      }
+    });
+
+    return () => controls.stop();
+  }, [index, textIndex]);
+
+  return (
+    <div className="relative h-[28px] flex items-center justify-center min-w-[300px]">
+      <p className="text-lg md:text-xl text-primary font-mono tracking-wider uppercase inline-block m-0 leading-none">
+        <span ref={textRef}></span>
+        <span className="animate-pulse ml-[2px] font-bold">|</span>
+      </p>
+    </div>
+  );
+}
 
 function FloatingTechItem({
   tech,
@@ -312,25 +369,8 @@ export default function Hero() {
         </h1>
 
         {/* Role */}
-        <FadeIn delay={0.5}>
-          <div className="h-[28px] md:h-[28px] mb-6 flex items-center justify-center min-w-[300px]">
-            <TypeAnimation
-              sequence={[
-                'Full Stack Software Developer',
-                2500,
-                'Especialista en React & Next.js',
-                2000,
-                'Arquitectura .NET & Node.js',
-                2000,
-                'Apasionado por la UI/UX',
-                2000,
-              ]}
-              wrapper="p"
-              speed={50}
-              className="text-lg md:text-xl text-primary font-mono tracking-wider uppercase inline-block m-0 leading-none"
-              repeat={Infinity}
-            />
-          </div>
+        <FadeIn delay={0.5} className="mb-6">
+          <TypewriterScroller />
         </FadeIn>
 
         {/* Description (adapts to view mode) */}
