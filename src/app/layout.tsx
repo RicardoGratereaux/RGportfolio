@@ -3,8 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/animations/SmoothScroll";
 import ViewToggle from "@/components/ui/ViewToggle";
-import InteractiveTerminal from "@/components/ui/InteractiveTerminal";
 import Navbar from "@/components/layout/Navbar";
+import ThemeProvider from "@/components/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,8 +35,6 @@ export const metadata: Metadata = {
   },
 };
 
-import ThemeProvider from "@/components/ThemeProvider";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -47,15 +45,13 @@ export default function RootLayout({
       lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30 transition-colors duration-500 theme-recruiter">
+      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-foreground selection:text-background transition-colors duration-400 theme-recruiter">
         <ThemeProvider>
           <SmoothScroll>
             <Navbar />
             <ViewToggle />
             {children}
-            <InteractiveTerminal />
           </SmoothScroll>
-
         </ThemeProvider>
       </body>
     </html>

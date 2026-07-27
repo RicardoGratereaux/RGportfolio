@@ -1,5 +1,5 @@
 import { memo, type ComponentType, type CSSProperties } from "react";
-import { CSharpIcon as CSharpSvgIcon } from "./svg/CSharpIcon";
+import { CSharpIcon as CSharpSvgIcon } from "./CSharpIcon";
 import {
   SiBootstrap,
   SiCss,

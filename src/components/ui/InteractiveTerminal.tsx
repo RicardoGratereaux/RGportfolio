@@ -89,7 +89,7 @@ export default function InteractiveTerminal() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-40 p-4 bg-zinc-900 border border-white/10 rounded-full shadow-lg text-primary hover:text-white transition-colors"
+        className="fixed bottom-6 right-6 z-40 p-4 bg-zinc-900 border border-foreground/10 rounded-full shadow-lg text-primary hover:text-foreground transition-colors"
       >
         <TerminalIcon className="w-6 h-6" />
       </motion.button>
@@ -102,10 +102,10 @@ export default function InteractiveTerminal() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed inset-x-4 bottom-4 md:inset-x-auto md:right-6 md:bottom-24 z-50 md:w-[400px] bg-zinc-950/95 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden shadow-2xl origin-bottom-right"
+            className="fixed inset-x-4 bottom-4 md:inset-x-auto md:right-6 md:bottom-24 z-50 md:w-[400px] bg-zinc-950/95 backdrop-blur-xl border border-foreground/10 rounded-xl overflow-hidden shadow-2xl origin-bottom-right"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-zinc-900/50">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-foreground/10 bg-zinc-900/50">
               <div className="flex gap-2">
                 <button onClick={() => setIsOpen(false)} className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 flex items-center justify-center group"><X className="w-2 h-2 opacity-0 group-hover:opacity-100" /></button>
                 <button className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 flex items-center justify-center group"><Minus className="w-2 h-2 opacity-0 group-hover:opacity-100" /></button>

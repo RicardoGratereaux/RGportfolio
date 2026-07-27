@@ -11,48 +11,43 @@
 }
 
 html {
-  /* scroll-behavior: smooth; Removed to avoid conflicts with Lenis */
+  scroll-behavior: smooth;
 }
 
-/* Dark mode by default for premium feel (Molten Amber on Onyx Black) */
+/* Dark mode by default (Minimal Charcoal / Onyx) */
 :root, .theme-developer {
-  --background: #0a0a0a; /* Pitch black */
-  --foreground: #fafafa; /* Pure off-white */
+  --background: #09090b; /* Pure minimal dark obsidian */
+  --foreground: #f4f4f5; /* Pure crisp white text */
   
-  /* Molten Amber / Cyber Gold (Luxurious & Premium) */
-  --primary: #ff9d00; 
-  --primary-foreground: #000000;
+  --primary: #ffffff; 
+  --primary-foreground: #09090b;
   
-  /* Explicit Tailwind mappings */
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --primary-glow: rgba(255, 157, 0, 0.4);
-  --primary-glow-hover: rgba(255, 157, 0, 0.6);
-  --primary-spotlight: rgba(255, 157, 0, 0.15);
+  --card-bg: rgba(255, 255, 255, 0.02);
+  --card-border: rgba(255, 255, 255, 0.08);
 }
 
 .theme-recruiter {
-  /* Elegant Light Theme: Swiss Editorial (Alabaster & Charcoal) */
-  --background: #f9f9f8; /* Very subtle warm paper white */
-  --foreground: #171717; /* Rich charcoal, softer than pure black */
+  /* Minimal Light Theme (Editorial Alabaster & Pure Charcoal) */
+  --background: #fafafa;
+  --foreground: #09090b;
   
-  --primary: #0a0a0a; /* Deepest onyx for accents */
+  --primary: #09090b;
   --primary-foreground: #ffffff; 
   
-  /* Explicit Tailwind mappings */
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --primary-glow: rgba(10, 10, 10, 0.12);
-  --primary-glow-hover: rgba(10, 10, 10, 0.22);
-  --primary-spotlight: rgba(10, 10, 10, 0.06);
-  
-  /* Inverted Neutral Scale for automatic dark->light mapping */
+  --card-bg: rgba(0, 0, 0, 0.02);
+  --card-border: rgba(0, 0, 0, 0.08);
+
+  /* Inverted Neutral Scale for theme remapping */
   --color-zinc-950: #ffffff;
   --color-zinc-900: #f4f4f5;
   --color-zinc-800: #e4e4e7;
@@ -65,8 +60,8 @@ html {
   --color-zinc-100: #18181b;
   --color-zinc-50:  #09090b;
   
-  --color-white: #09090b; /* Inverted */
-  --color-black: #ffffff; /* Inverted */
+  --color-white: #09090b;
+  --color-black: #ffffff;
 }
 
 body {
@@ -77,121 +72,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Background floating animations (GPU accelerated) */
-@keyframes float-slow-1 {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
-  }
-  33% {
-    transform: translate3d(40px, -50px, 0) scale(1.05) rotate(5deg);
-  }
-  66% {
-    transform: translate3d(-20px, 30px, 0) scale(0.95) rotate(-5deg);
-  }
+.theme-transitioning, .theme-transitioning * {
+  transition-property: background-color, border-color, color, fill, stroke !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-duration: 400ms !important;
 }
 
-@keyframes float-slow-2 {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
-  }
-  50% {
-    transform: translate3d(-50px, 40px, 0) scale(1.08) rotate(-10deg);
-  }
-}
-
-@layer utilities {
-  @keyframes ambient-float {
-    0%, 100% {
-      transform: translate3d(0, 0, 0);
-      opacity: var(--op-min, 0.5);
-    }
-    50% {
-      transform: translate3d(var(--float-x, 0), var(--float-y, 0), 0);
-      opacity: var(--op-max, 1);
-    }
-  }
-
-  .animate-float-blob-1 {
-    animation: float-slow-1 25s infinite ease-in-out;
-    will-change: transform;
-  }
-
-  .animate-float-blob-2 {
-    animation: float-slow-2 30s infinite ease-in-out;
-    will-change: transform;
-  }
-
-  .animate-float-blob-3 {
-    animation: float-slow-1 22s infinite ease-in-out reverse;
-    will-change: transform;
-  }
-
-  @keyframes typing-css {
-    0% { width: 0; }
-    35% { width: calc(var(--char-count) * (1ch + 0.05em)); }
-    85% { width: calc(var(--char-count) * (1ch + 0.05em)); }
-    95% { width: 0; }
-    100% { width: 0; }
-  }
-
-  @keyframes blink-css {
-    from, to { border-color: transparent }
-    50% { border-color: var(--primary); }
-  }
-
-  .tech-card {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    transition: backdrop-filter 0.4s ease, -webkit-backdrop-filter 0.4s ease;
-  }
-
-  .tech-card.near-mouse {
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-  }
-}
-
-/* 
-==========================================================================
-MODERN SCROLL-DRIVEN ANIMATIONS (Native CSS - Zero JS Overhead)
-Tied directly to the scrollbar for physical scrubbing.
-========================================================================== 
-*/
-@media (prefers-reduced-motion: no-preference) {
-  @supports ((animation-timeline: view()) and (animation-range: entry)) {
-    @keyframes sda-fade-in {
-      from {
-        opacity: 0;
-        transform: translateY(50px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-    
-    @keyframes sda-text-reveal {
-      from {
-        opacity: 0;
-        transform: translateY(100%);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .sda-fade-in {
-      animation: sda-fade-in linear both;
-      animation-timeline: view();
-      /* Starts fading when element is 5% in, finishes when 30% in */
-      animation-range: entry 5% cover 30%; 
-    }
-
-    .sda-text-reveal {
-      animation: sda-text-reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 5% cover 25%;
-    }
-  }
+.minimal-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 1rem;
 }

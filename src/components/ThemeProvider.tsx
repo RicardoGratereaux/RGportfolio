@@ -7,6 +7,8 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   const { viewMode } = useViewStore();
 
   useEffect(() => {
+    document.documentElement.classList.add("theme-transitioning");
+    
     if (viewMode === "recruiter") {
       document.body.classList.add("theme-recruiter");
       document.body.classList.remove("theme-developer");
@@ -14,6 +16,12 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       document.body.classList.add("theme-developer");
       document.body.classList.remove("theme-recruiter");
     }
+    
+    const timeout = setTimeout(() => {
+      document.documentElement.classList.remove("theme-transitioning");
+    }, 500);
+    
+    return () => clearTimeout(timeout);
   }, [viewMode]);
 
   return <>{children}</>;

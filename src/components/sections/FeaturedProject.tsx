@@ -1,14 +1,10 @@
 "use client";
 
 import { useViewStore } from "@/store/useViewStore";
-import { FadeIn } from "@/components/animations/Reveal";
-import MagneticButton from "@/components/ui/MagneticButton";
-import SpotlightCard from "@/components/ui/SpotlightCard";
-import { NextjsIcon, ReactIcon, TypeScriptIcon, TailwindIcon, PrismaIcon, PostgreSQLIcon, StripeIcon, ZodIcon } from "@/components/icons/TechIcons";
-import { ExternalLink, ArrowRight, Code2, Database, LayoutTemplate, Shield, ShoppingCart, CreditCard, BarChart3, Layers, Search } from "lucide-react";
-import LiquidGlass from "@/components/ui/LiquidGlass";
-import GlassButton from "@/components/ui/GlassButton";
-import { motion } from "framer-motion";
+import {
+  NextjsIcon, ReactIcon, TypeScriptIcon, TailwindIcon, PrismaIcon, PostgreSQLIcon, StripeIcon, ZodIcon, GitHubIcon
+} from "@/components/icons/TechIcons";
+import { ExternalLink } from "lucide-react";
 
 const projectTechs = [
   { name: "Next.js 16", Icon: NextjsIcon },
@@ -22,12 +18,12 @@ const projectTechs = [
 ];
 
 const features = [
-  { icon: Shield, label: "Auth completa", desc: "Login, registro y roles" },
-  { icon: ShoppingCart, label: "Carrito & Checkout", desc: "Flujo de compra optimizado" },
-  { icon: CreditCard, label: "Pagos con Stripe", desc: "Checkout seguro integrado" },
-  { icon: BarChart3, label: "Dashboard Admin", desc: "Gestión de productos" },
-  { icon: Layers, label: "Server Components", desc: "SSR & Server Actions" },
-  { icon: Search, label: "SEO Optimizado", desc: "Core Web Vitals 100" },
+  { label: "Autenticación & Roles", desc: "Login, registro y gestión de permisos con NextAuth" },
+  { label: "Carrito & Checkout", desc: "Flujo de compra optimizado con mutaciones de estado" },
+  { label: "Procesamiento de Pagos", desc: "Integración completa con Stripe Webhooks" },
+  { label: "Dashboard Administrativo", desc: "Gestión en tiempo real de catálogo e inventario" },
+  { label: "Server Components", desc: "Renderizado híbrido SSR/ISR y Server Actions" },
+  { label: "Optimizaciones Web", desc: "Puntuación de Core Web Vitals 100 y SEO amplio" },
 ];
 
 export default function FeaturedProject() {
@@ -35,134 +31,75 @@ export default function FeaturedProject() {
   const isDeveloper = viewMode === "developer";
 
   return (
-    <section id="projects" className="py-20 md:py-32 relative w-full">
-      <div className="absolute top-1/3 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
+    <section id="projects" className="py-24 relative w-full border-t border-foreground/10">
+      <div className="container mx-auto px-6 max-w-5xl">
+        <p className="text-xs font-mono text-foreground/50 mb-2 uppercase tracking-widest">
+          04. Case Study
+        </p>
+        <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-12 text-foreground">
+          Proyecto Destacado
+        </h2>
 
-      <div className="container mx-auto px-6">
-        <FadeIn>
-          <div className="flex items-center gap-6 mb-10 md:mb-16">
+        {/* Main Card */}
+        <div className="p-8 md:p-12 rounded-2xl border border-foreground/10 bg-foreground/[0.02] mb-8">
+          <div className="flex flex-col md:flex-row justify-between md:items-start mb-6 gap-4">
             <div>
-              <p className="text-primary font-mono text-sm mb-3 tracking-wider uppercase">Case Study</p>
-              <h2 className="text-4xl md:text-6xl font-bold tracking-tight">
-                Proyecto <span className="bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">Destacado</span>
-              </h2>
+              <span className="text-xs font-mono text-foreground/50 uppercase tracking-wider block mb-2">
+                Ecommerce Platform
+              </span>
+              <h3 className="text-3xl md:text-4xl font-bold text-foreground">
+                Gold Ocean Lures
+              </h3>
             </div>
-            <div className="h-px bg-gradient-to-r from-white/10 to-transparent flex-1 ml-4 hidden md:block" />
-          </div>
-        </FadeIn>
 
-        {/* Project Header */}
-        <FadeIn delay={0.1}>
-          <div className="glass-panel rounded-3xl p-8 md:p-12 mb-8 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-primary/10 rounded-full blur-[80px] pointer-events-none" />
-
-            <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
-              {/* Info */}
-              <div>
-                <div className="inline-flex items-center gap-2 text-primary font-mono text-sm mb-6">
-                  {isDeveloper ? <Database className="w-4 h-4" /> : <LayoutTemplate className="w-4 h-4" />}
-                  {isDeveloper ? "Arquitectura Full Stack" : "Producto Digital Completo"}
-                </div>
-
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                  Gold Ocean Lures
-                </h3>
-
-                <p className="text-zinc-400 leading-relaxed mb-8">
-                  {isDeveloper
-                    ? "Sistema de comercio electrónico end-to-end construido con Next.js App Router. Implementa Server Actions para mutaciones optimistas, Prisma como ORM type-safe, Stripe para procesamiento de pagos y NextAuth para autenticación basada en roles. Arquitectura modular siguiendo principios SOLID con validación Zod en cada capa."
-                    : "Una experiencia de compra moderna, fluida e interactiva. Los usuarios pueden explorar el catálogo, gestionar su carrito y completar pagos de forma segura. Incluye un dashboard de administración intuitivo para gestión de productos, inventario y pedidos. Diseño responsive y optimizado para SEO."}
-                </p>
-
-                {/* Tech pills with icons */}
-                <div className="flex flex-wrap gap-2 mb-8">
-                  {projectTechs.map((tech) => (
-                    <span
-                      key={tech.name}
-                      className="inline-flex items-center gap-2 text-xs font-mono text-zinc-300 bg-white/[0.04] px-3 py-1.5 rounded-full border border-white/[0.06] hover:border-primary/30 transition-all"
-                    >
-                      <tech.Icon className="w-3.5 h-3.5" />
-                      {tech.name}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex items-center gap-6">
-                  <GlassButton href="#">
-                    Ver Más
-                  </GlassButton>
-                  <MagneticButton>
-                    <a href="#" className="group flex items-center gap-2 text-zinc-400 hover:text-white transition-colors text-sm font-medium">
-                      <ExternalLink className="w-4 h-4" />
-                      Live Demo
-                    </a>
-                  </MagneticButton>
-                </div>
-              </div>
-
-              {/* Visual Mockup */}
-              <div className="relative group">
-                <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-zinc-900 aspect-[4/3] shadow-2xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-900 to-black p-6 flex flex-col">
-                    {/* Browser chrome */}
-                    <div className="w-full flex items-center gap-2 mb-6">
-                      <div className="flex gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
-                      </div>
-                      <div className="flex-1 bg-white/5 h-5 rounded-md ml-3 max-w-xs" />
-                    </div>
-                    {/* Layout */}
-                    <div className="flex-1 flex gap-4">
-                      <div className="w-1/5 space-y-3">
-                        <div className="h-6 bg-white/5 rounded" />
-                        <div className="h-4 bg-white/[0.03] rounded w-3/4" />
-                        <div className="h-4 bg-white/[0.03] rounded w-2/3" />
-                        <div className="h-4 bg-white/[0.03] rounded w-4/5" />
-                        <div className="h-4 bg-white/[0.03] rounded w-1/2" />
-                      </div>
-                      <div className="flex-1 flex flex-col gap-3">
-                        <div className="h-2/5 bg-white/5 rounded-lg flex items-center justify-center">
-                          <div className="w-12 h-12 rounded-xl bg-primary/20 border border-primary/30" />
-                        </div>
-                        <div className="flex-1 grid grid-cols-3 gap-3">
-                          {[1, 2, 3].map((n) => (
-                            <div key={n} className="bg-white/[0.04] rounded-lg p-3 flex flex-col justify-between">
-                              <div className="w-full h-1/2 bg-white/5 rounded" />
-                              <div className="space-y-1 mt-2">
-                                <div className="h-2 bg-white/5 rounded w-3/4" />
-                                <div className="h-2 bg-white/[0.03] rounded w-1/2" />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay" />
-                </div>
-              </div>
+            <div className="flex items-center gap-4">
+              <a
+                href="#"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-foreground/15 text-xs font-mono hover:bg-foreground/10 transition-colors"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Live Demo</span>
+              </a>
+              <a
+                href="#"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground text-background text-xs font-mono font-medium hover:opacity-90 transition-opacity"
+              >
+                <GitHubIcon className="w-3.5 h-3.5" />
+                <span>Código</span>
+              </a>
             </div>
           </div>
-        </FadeIn>
 
-        {/* Features Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
-          {features.map((feature, i) => (
-            <FadeIn key={feature.label} delay={0.1 + i * 0.05}>
-              <SpotlightCard className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                    <feature.icon className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-white mb-1">{feature.label}</h4>
-                    <p className="text-xs text-zinc-500">{feature.desc}</p>
-                  </div>
-                </div>
-              </SpotlightCard>
-            </FadeIn>
+          <p className="text-foreground/70 leading-relaxed mb-8 text-base">
+            {isDeveloper
+              ? "Sistema de comercio electrónico full stack con Next.js App Router. Implementa Server Actions para mutaciones optimistas, Prisma ORM, Stripe para transacciones y NextAuth para roles. Arquitectura modular con validación estricta Zod."
+              : "Plataforma web moderna de ventas con catálogo interactivo, carrito de compras, pasarela de pagos segura y panel administrativo completo."}
+          </p>
+
+          {/* Tech Badges */}
+          <div className="flex flex-wrap gap-2 pt-6 border-t border-foreground/10">
+            {projectTechs.map((tech) => (
+              <span
+                key={tech.name}
+                className="inline-flex items-center gap-1.5 text-xs font-mono text-foreground/70 border border-foreground/10 px-3 py-1 rounded-full"
+              >
+                <tech.Icon className="w-3.5 h-3.5" />
+                {tech.name}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Feature Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {features.map((feat) => (
+            <div
+              key={feat.label}
+              className="p-6 rounded-xl border border-foreground/10 bg-foreground/[0.02]"
+            >
+              <h4 className="text-sm font-bold text-foreground mb-1">{feat.label}</h4>
+              <p className="text-xs text-foreground/60 leading-relaxed">{feat.desc}</p>
+            </div>
           ))}
         </div>
       </div>

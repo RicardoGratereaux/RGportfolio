@@ -1,115 +1,95 @@
 "use client";
 
-import { FadeIn } from "@/components/animations/Reveal";
-import MagneticButton from "@/components/ui/MagneticButton";
-import LiquidGlass from "@/components/ui/LiquidGlass";
-import GlassButton from "@/components/ui/GlassButton";
-import { Send, Mail, MapPin, ArrowUpRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { Mail, MapPin, Send } from "lucide-react";
 
 export default function Contact() {
-  const isDeveloper = true;
   return (
-    <section id="contact" className="py-20 md:py-32 relative w-full">
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
+    <section id="contact" className="py-24 relative w-full border-t border-foreground/10">
+      <div className="container mx-auto px-6 max-w-5xl">
+        <p className="text-xs font-mono text-foreground/50 mb-2 uppercase tracking-widest">
+          05. Contacto
+        </p>
+        <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
+          Ponte en Contacto
+        </h2>
+        <p className="text-foreground/60 max-w-xl leading-relaxed mb-12 text-base">
+          ¿Tienes un proyecto en mente o buscas un desarrollador Full Stack para tu equipo? Envíame un mensaje.
+        </p>
 
-      <div className="container mx-auto px-6">
-        <FadeIn>
-          <div className="text-center mb-12 md:mb-20">
-            <p className="text-primary font-mono text-sm mb-3 tracking-wider uppercase">Contacto</p>
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-              Ponte en <span className="bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">Contacto</span>
-            </h2>
-            <p className="text-zinc-400 max-w-xl mx-auto leading-relaxed">
-              ¿Tienes un proyecto en mente o buscas un desarrollador Full Stack para tu equipo?
-              Envíame un mensaje y hablemos.
-            </p>
-          </div>
-        </FadeIn>
-
-        <div className="max-w-4xl mx-auto grid md:grid-cols-5 gap-12">
-          {/* Contact Info */}
-          <FadeIn delay={0.2} className="md:col-span-2 space-y-6">
-            <motion.a
-              href="mailto:hello@example.com"
-              whileHover={{ scale: 1.02 }}
-              className="glass-panel p-6 rounded-2xl flex items-start gap-4 group hover:border-primary/30 transition-all"
+        <div className="grid md:grid-cols-5 gap-10">
+          {/* Info Side */}
+          <div className="md:col-span-2 space-y-6">
+            <a
+              href="mailto:contact@ricardogratereaux.dev"
+              className="p-6 rounded-2xl border border-foreground/10 bg-foreground/[0.02] block hover:border-foreground/25 transition-colors"
             >
-              <div className="p-3 bg-primary/10 text-primary rounded-xl group-hover:bg-primary/20 transition-colors">
-                <Mail className="w-5 h-5" />
+              <div className="flex items-center gap-3 mb-2">
+                <Mail className="w-4 h-4 text-foreground/60" />
+                <h4 className="text-sm font-bold text-foreground">Email</h4>
               </div>
-              <div className="flex-1">
-                <h4 className="text-white font-medium mb-1 text-sm">Email</h4>
-                <p className="text-zinc-400 text-sm group-hover:text-white transition-colors">
-                  hello@example.com
-                </p>
-              </div>
-              <ArrowUpRight className="w-4 h-4 text-zinc-600 group-hover:text-primary transition-colors mt-1" />
-            </motion.a>
+              <p className="text-sm font-mono text-foreground/80">contact@ricardogratereaux.dev</p>
+            </a>
 
-            <div className="glass-panel p-6 rounded-2xl flex items-start gap-4">
-              <div className="p-3 bg-primary/10 text-primary rounded-xl">
-                <MapPin className="w-5 h-5" />
+            <div className="p-6 rounded-2xl border border-foreground/10 bg-foreground/[0.02]">
+              <div className="flex items-center gap-3 mb-2">
+                <MapPin className="w-4 h-4 text-foreground/60" />
+                <h4 className="text-sm font-bold text-foreground">Ubicación</h4>
               </div>
+              <p className="text-sm text-foreground/80">República Dominicana</p>
+            </div>
+          </div>
+
+          {/* Form Side */}
+          <form
+            className="md:col-span-3 p-8 rounded-2xl border border-foreground/10 bg-foreground/[0.02] space-y-6"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <h4 className="text-white font-medium mb-1 text-sm">Ubicación</h4>
-                <p className="text-zinc-400 text-sm">República Dominicana</p>
-              </div>
-            </div>
-
-            <div className="p-6 rounded-2xl">
-              <p className="text-zinc-600 text-xs font-mono leading-relaxed">
-                Respondo generalmente en menos de 24 horas. También puedes encontrarme en GitHub y LinkedIn.
-              </p>
-            </div>
-          </FadeIn>
-
-          {/* Form */}
-          <FadeIn delay={0.3} className="md:col-span-3">
-            <form className="glass-panel p-8 rounded-3xl space-y-6" onSubmit={(e) => e.preventDefault()}>
-              <div className="grid sm:grid-cols-2 gap-5">
-                <div className="space-y-2">
-                  <label htmlFor="contact-name" className="text-xs font-medium text-zinc-400 font-mono uppercase tracking-wider">
-                    Nombre
-                  </label>
-                  <input
-                    id="contact-name"
-                    type="text"
-                    className="w-full bg-zinc-950/60 border border-white/[0.06] rounded-xl px-4 py-3.5 text-white text-sm placeholder:text-zinc-700 focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all"
-                    placeholder="Tu nombre"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="contact-email" className="text-xs font-medium text-zinc-400 font-mono uppercase tracking-wider">
-                    Email
-                  </label>
-                  <input
-                    id="contact-email"
-                    type="email"
-                    className="w-full bg-zinc-950/60 border border-white/[0.06] rounded-xl px-4 py-3.5 text-white text-sm placeholder:text-zinc-700 focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all"
-                    placeholder="tu@email.com"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="contact-message" className="text-xs font-medium text-zinc-400 font-mono uppercase tracking-wider">
-                  Mensaje
+                <label htmlFor="name" className="block text-xs font-mono text-foreground/60 mb-2">
+                  Nombre
                 </label>
-                <textarea
-                  id="contact-message"
-                  rows={5}
-                  className="w-full bg-zinc-950/60 border border-white/[0.06] rounded-xl px-4 py-3.5 text-white text-sm placeholder:text-zinc-700 focus:outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/20 transition-all resize-none"
-                  placeholder="Hola Ricardo, me gustaría hablar contigo sobre..."
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="Tu nombre"
+                  className="w-full bg-background border border-foreground/15 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-foreground transition-colors"
                 />
               </div>
 
-              <GlassButton wrapperClassName="w-full" className="w-full">
-                <span>Enviar Mensaje</span>
-                <Send className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </GlassButton>
-            </form>
-          </FadeIn>
+              <div>
+                <label htmlFor="email" className="block text-xs font-mono text-foreground/60 mb-2">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="tu@email.com"
+                  className="w-full bg-background border border-foreground/15 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-foreground transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="message" className="block text-xs font-mono text-foreground/60 mb-2">
+                Mensaje
+              </label>
+              <textarea
+                id="message"
+                rows={5}
+                placeholder="Hola Ricardo, me gustaría hablar sobre..."
+                className="w-full bg-background border border-foreground/15 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-foreground transition-colors resize-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-foreground text-background font-medium text-sm hover:opacity-90 transition-opacity"
+            >
+              <span>Enviar Mensaje</span>
+              <Send className="w-4 h-4" />
+            </button>
+          </form>
         </div>
       </div>
     </section>
