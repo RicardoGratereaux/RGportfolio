@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/animations/SmoothScroll";
-import ViewToggle from "@/components/ui/ViewToggle";
 import Navbar from "@/components/layout/Navbar";
 import ThemeProvider from "@/components/ThemeProvider";
 
@@ -52,7 +51,6 @@ export default function RootLayout({
         <ThemeProvider>
           <SmoothScroll>
             <Navbar />
-            <ViewToggle />
             {children}
           </SmoothScroll>
         </ThemeProvider>

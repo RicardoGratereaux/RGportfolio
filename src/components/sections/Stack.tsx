@@ -112,11 +112,11 @@ export default function Stack() {
           Stack Principal
         </h2>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {categories.map((cat) => (
             <div
               key={cat.title}
-              className="p-8 rounded-2xl border border-foreground/10 bg-foreground/[0.02]"
+              className="p-6 md:p-8 rounded-2xl border border-foreground/10 bg-foreground/[0.02] min-w-0 overflow-hidden"
             >
               <h3 className="text-lg font-bold text-foreground mb-6 pb-3 border-b border-foreground/10">
                 {cat.title}
@@ -128,7 +128,7 @@ export default function Stack() {
                   return (
                     <div
                       key={item.name}
-                      className="flex items-start gap-3.5 p-2.5 rounded-xl hover:bg-foreground/[0.03] transition-colors"
+                      className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-foreground/[0.03] transition-colors min-w-0"
                     >
                       <div className="w-8 h-8 rounded-lg border border-foreground/10 bg-foreground/[0.03] flex items-center justify-center shrink-0 mt-0.5">
                         {IconComp ? (
@@ -142,12 +142,12 @@ export default function Stack() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-sm font-medium text-foreground">{item.name}</span>
+                          <span className="text-sm font-medium text-foreground break-words">{item.name}</span>
                           <span className="text-[10px] font-mono text-foreground/50 border border-foreground/10 px-2 py-0.5 rounded-full">
                             {item.level}
                           </span>
                         </div>
-                        <p className="text-xs text-foreground/50 truncate mt-0.5">{item.desc}</p>
+                        <p className="text-xs text-foreground/50 break-words mt-0.5">{item.desc}</p>
                       </div>
                     </div>
                   );

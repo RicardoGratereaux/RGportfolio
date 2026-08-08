@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Menu, X, ArrowRight, ExternalLink, ChevronDown, Layers, Sparkles, Code2, Database } from "lucide-react";
 import { GitHubIcon } from "@/components/icons/TechIcons";
+import ViewToggle from "@/components/ui/ViewToggle";
 
 const projectsList = [
   {
@@ -148,6 +149,7 @@ export default function Navbar() {
                 </a>
               );
             })}
+            <ViewToggle className="hidden md:flex" />
           </div>
 
           {/* CTA */}
@@ -302,20 +304,23 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="fixed inset-0 top-16 bg-background/95 backdrop-blur-lg z-40 flex flex-col items-center justify-center gap-8 md:hidden">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => {
-                setMobileOpen(false);
-                handleScrollClick(e, link.href);
-              }}
-              className="text-2xl font-bold text-foreground/80 hover:text-foreground"
-            >
-              {link.label}
-            </a>
-          ))}
+        <div className="fixed inset-0 top-16 bg-background/95 backdrop-blur-lg z-40 flex flex-col items-center justify-start gap-8 overflow-auto p-6 md:hidden">
+          <ViewToggle mobile className="w-full max-w-md" />
+          <div className="flex flex-col items-center gap-6 pt-4">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={(e) => {
+                  setMobileOpen(false);
+                  handleScrollClick(e, link.href);
+                }}
+                className="text-2xl font-bold text-foreground/80 hover:text-foreground"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
         </div>
       )}
     </>
