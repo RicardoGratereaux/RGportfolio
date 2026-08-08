@@ -10,7 +10,7 @@ const projectsList = [
     category: "Ecommerce Full Stack",
     description: "Plataforma de comercio electrónico con Next.js 16, Stripe y Prisma.",
     href: "#projects",
-    techs: ["Next.js", "Stripe", "Prisma"],
+    techs: ["Next.js", "Stripe", "Prisma", "NextAuth"],
     featured: true,
     icon: Sparkles,
   },
@@ -28,7 +28,7 @@ const projectsList = [
     category: "Plataforma Multimedia",
     description: "Aplicación de streaming con catálogo interactivo y consumo de API.",
     href: "#projects",
-    techs: ["React", "Node.js", "REST API"],
+    techs: ["C#", ".NET", "SQL Server"],
     featured: false,
     icon: Layers,
   },
@@ -71,7 +71,7 @@ export default function Navbar() {
   const handleMouseLeave = () => {
     hoverTimeoutRef.current = setTimeout(() => {
       setDropdownOpen(false);
-    }, 200);
+    }, 250);
   };
 
   const handleScrollClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -92,7 +92,7 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-100 duration-300 border-foreground/10 ${
           scrolled || dropdownOpen
             ? "bg-background/90 backdrop-blur-xl border-b border-foreground/10 py-3"
             : "bg-transparent py-5"
@@ -177,7 +177,7 @@ export default function Navbar() {
           onMouseLeave={handleMouseLeave}
           className={`absolute left-0 right-0 top-full bg-background/95 backdrop-blur-2xl border-b border-foreground/10 transition-all duration-300 ease-out overflow-hidden hidden md:block ${
             dropdownOpen
-              ? "opacity-100 max-h-[500px] pointer-events-auto shadow-2xl"
+              ? "opacity-100 max-h-[500px] pointer-events-auto shadow-2xl border-foreground/10"
               : "opacity-0 max-h-0 pointer-events-none"
           }`}
         >
@@ -266,7 +266,7 @@ export default function Navbar() {
                     Recursos
                   </span>
                   <a
-                    href="https://github.com"
+                    href="https://github.com/RicardoGratereaux?tab=repositories"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-between text-xs text-foreground/70 hover:text-foreground py-1 transition-colors"

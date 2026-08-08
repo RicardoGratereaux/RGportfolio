@@ -10,7 +10,7 @@ export default function Experience() {
     {
       role: "Team Leader",
       company: "PR Support Management",
-      period: "2024 - Actualidad",
+      period: "Nov 2024 - Actualidad",
       description: isDeveloper
         ? "Liderazgo técnico del equipo de monitoreo. Resolución de incidencias críticas del sistema, implementación de automatizaciones para optimizar procesos repetitivos y diseño de dashboards de métricas."
         : "Supervisión directa de equipo operativo. Gestión integral de incidencias con SLA estrictos y optimización continua de flujos de trabajo.",
@@ -21,18 +21,29 @@ export default function Experience() {
     {
       role: "Agente de Monitoreo",
       company: "PR Support Management",
-      period: "2023 - 2024",
+      period: "Dec 2023 - Nov 2024",
       description: isDeveloper
-        ? "Monitoreo en tiempo real de sistemas y servicios. Análisis de logs para identificar patrones de fallo, documentación técnica y escalamiento eficiente a ingeniería."
-        : "Vigilancia proactiva de la infraestructura tecnológica, cumplimiento de SLA y colaboración interdepartamental.",
+        ? "Monitoreo en tiempo real de cámaras CCTV con SmartPSS para establecimientos departamentales. Documentación de informes a gerenciales y directivos vía SmartSheet."
+        : "Monitoreo en tiempo real de sistemas CCTV en tiendas departamentales. Elaboración de informes ejecutivos para la gerencia y directivos, así como investigación de pérdidas y verificación del cumplimiento operativo.",
       skills: isDeveloper
-        ? ["Monitoreo", "Análisis de Logs", "Debugging"]
-        : ["Comunicación", "SLA", "Colaboración"],
+        ? ["Monitoreo CCTV", "Análisis de Situaciones de riesgo", "Escalado de Informes", "SmartPSS"]
+        : ["Comunicación", "Monitoreo CCTV", "Colaboración"],
     },
     {
-      role: "Proyectos de Software & Formación",
+      role: "Gestor Operativo",
+      company: "Soluciones Inmobiliarias PGR",
+      period: "2020 - Actualidad",
+      description: isDeveloper
+        ? "Classified"
+        : "Classified",
+      skills: isDeveloper
+        ? ["Classified"]
+        : ["Classified"],
+    },
+    {
+      role: "Proyectos de Software Académicos y Formación",
       company: "ITLA (Instituto Tecnológico de las Américas)",
-      period: "2021 - 2025",
+      period: "Ene 2021 - Oct 2025",
       description: isDeveloper
         ? "Desarrollo de proyectos simulando entornos de producción (Internet Banking, plataformas multimedia, ecommerce). Arquitectura Clean/Onion, principios SOLID y patrones de diseño en C#/.NET y SQL Server."
         : "Formación práctica en desarrollo empresarial con metodologías ágiles, liderazgo bajo plazos estrictos y trabajo colaborativo.",

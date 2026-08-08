@@ -13,7 +13,6 @@ export default function Hero() {
       <div className="container mx-auto px-6 max-w-5xl">
         {/* Status Pill */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-foreground/10 bg-foreground/[0.03] text-xs font-mono mb-8 text-foreground/70">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span>Disponible para nuevos proyectos</span>
         </div>
 
@@ -58,7 +57,7 @@ export default function Hero() {
         {/* Social Links */}
         <div className="flex items-center gap-6 pt-6 border-t border-foreground/10 text-foreground/50">
           <a
-            href="https://github.com"
+            href="https://github.com/RicardoGratereaux"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm hover:text-foreground transition-colors"
@@ -68,7 +67,7 @@ export default function Hero() {
             <span>GitHub</span>
           </a>
           <a
-            href="https://linkedin.com"
+            href="https://do.linkedin.com/in/ricardo-gratereaux-baez-2a5915158"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-sm hover:text-foreground transition-colors"
@@ -78,7 +77,7 @@ export default function Hero() {
             <span>LinkedIn</span>
           </a>
           <a
-            href="mailto:contact@ricardogratereaux.dev"
+            href="mailto:ricardogratereauxbaez@gmail.com"
             className="inline-flex items-center gap-2 text-sm hover:text-foreground transition-colors"
           >
             <Mail className="w-4 h-4" />

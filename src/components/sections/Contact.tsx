@@ -20,14 +20,14 @@ export default function Contact() {
           {/* Info Side */}
           <div className="md:col-span-2 space-y-6">
             <a
-              href="mailto:contact@ricardogratereaux.dev"
+              href="mailto:ricardogratereauxbaez@gmail.com"
               className="p-6 rounded-2xl border border-foreground/10 bg-foreground/[0.02] block hover:border-foreground/25 transition-colors"
             >
               <div className="flex items-center gap-3 mb-2">
                 <Mail className="w-4 h-4 text-foreground/60" />
                 <h4 className="text-sm font-bold text-foreground">Email</h4>
               </div>
-              <p className="text-sm font-mono text-foreground/80">contact@ricardogratereaux.dev</p>
+              <p className="text-sm font-mono text-foreground/80">ricardogratereauxbaez@gmail.com</p>
             </a>
 
             <div className="p-6 rounded-2xl border border-foreground/10 bg-foreground/[0.02]">
@@ -35,7 +35,7 @@ export default function Contact() {
                 <MapPin className="w-4 h-4 text-foreground/60" />
                 <h4 className="text-sm font-bold text-foreground">Ubicación</h4>
               </div>
-              <p className="text-sm text-foreground/80">República Dominicana</p>
+              <p className="text-sm text-foreground/80">República Dominicana, Santo Domingo</p>
             </div>
           </div>
 

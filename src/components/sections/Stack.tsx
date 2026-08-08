@@ -1,11 +1,20 @@
 "use client";
 
 import { useViewStore } from "@/store/useViewStore";
+import type { TechIconComponent } from "@/components/icons/TechIcons";
 import {
-  NextjsIcon, ReactIcon, TypeScriptIcon, TailwindIcon, HTML5Icon, CSS3Icon, JavaScriptIcon, NodejsIcon, RestAPIIcon, PrismaIcon, PostgreSQLIcon, NextAuthIcon, ZodIcon, BcryptIcon, StripeIcon, ResendIcon, VercelBlobIcon, VitestIcon, ESLintIcon, GitIcon, GitHubIcon, VercelIcon, VSCodeIcon, PnpmIcon, CSharpIcon, DotNetIcon, PythonIcon, SQLServerIcon, SEOIcon, BootstrapIcon
+  NextjsIcon, ReactIcon, TypeScriptIcon,
+  TailwindIcon, HTML5Icon, CSS3Icon,
+  JavaScriptIcon, NodejsIcon, RestAPIIcon,
+  PrismaIcon, PostgreSQLIcon, NextAuthIcon,
+  ZodIcon, BcryptIcon, StripeIcon,
+  VercelBlobIcon, VitestIcon, ESLintIcon, GitIcon,
+  GitHubIcon, VercelIcon, VSCodeIcon, PnpmIcon,
+  CSharpIcon, DotNetIcon, PythonIcon, SQLServerIcon,
+  SEOIcon, BootstrapIcon, ResendIcon,
 } from "@/components/icons/TechIcons";
 
-const techIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+const techIconMap: Record<string, TechIconComponent> = {
   "Next.js 16": NextjsIcon,
   "React 19": ReactIcon,
   "TypeScript": TypeScriptIcon,
@@ -91,6 +100,7 @@ const categories: TechCategory[] = [
 
 export default function Stack() {
   const { viewMode } = useViewStore();
+  const resendIconColor = viewMode === "recruiter" ? "#000000" : "#ffffff";
 
   return (
     <section id="stack" className="py-24 relative w-full border-t border-foreground/10">
@@ -122,7 +132,10 @@ export default function Stack() {
                     >
                       <div className="w-8 h-8 rounded-lg border border-foreground/10 bg-foreground/[0.03] flex items-center justify-center shrink-0 mt-0.5">
                         {IconComp ? (
-                          <IconComp className="w-4 h-4 text-foreground" />
+                          <IconComp
+                            className="w-4 h-4"
+                            color={item.name === "Resend" ? resendIconColor : undefined}
+                          />
                         ) : (
                           <span className="w-1.5 h-1.5 rounded-full bg-foreground" />
                         )}
