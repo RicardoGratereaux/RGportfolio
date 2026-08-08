@@ -120,11 +120,3 @@ export const TechIcon = memo(function TechIcon({
     </div>
   );
 });
-
-
-
-
-
-
-
-

@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     title: "Ricardo Gratereaux",
     description: "Full Stack Software Developer",
   },
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
