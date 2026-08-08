@@ -8,13 +8,16 @@ interface ViewToggleProps {
   mobile?: boolean;
 }
 
-export default function ViewToggle({ className, mobile }: ViewToggleProps) {
+export default function ViewToggle({ className = "", mobile = false }: ViewToggleProps) {
   const { viewMode, toggleViewMode } = useViewStore();
   const isDeveloper = viewMode === "developer";
-  const labelClass = mobile ? "inline" : "hidden sm:inline";
+  const labelClass = mobile ? "hidden" : "hidden sm:inline";
+  const wrapperClass = mobile
+    ? `flex md:hidden items-center p-1 rounded-full bg-background/80 backdrop-blur-md border border-foreground/15 shadow-sm ${className}`
+    : `hidden md:flex fixed top-24 right-6 z-50 items-center p-1 rounded-full bg-background/80 backdrop-blur-md border border-foreground/15 shadow-sm ${className}`;
 
   return (
-    <div className={`flex items-center p-1 rounded-full bg-background/80 backdrop-blur-md border border-foreground/15 shadow-sm ${className ?? ""}`}>
+    <div className={wrapperClass}>
       <button
         onClick={() => !isDeveloper && toggleViewMode()}
         className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono rounded-full transition-all ${

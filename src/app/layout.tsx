@@ -4,6 +4,7 @@ import "./globals.css";
 import SmoothScroll from "@/components/animations/SmoothScroll";
 import Navbar from "@/components/layout/Navbar";
 import ThemeProvider from "@/components/ThemeProvider";
+import ViewToggle from "@/components/ui/ViewToggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,6 +52,7 @@ export default function RootLayout({
         <ThemeProvider>
           <SmoothScroll>
             <Navbar />
+            <ViewToggle className="hidden md:flex" />
             {children}
           </SmoothScroll>
         </ThemeProvider>

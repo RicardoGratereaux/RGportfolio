@@ -149,7 +149,6 @@ export default function Navbar() {
                 </a>
               );
             })}
-            <ViewToggle className="hidden md:flex" />
           </div>
 
           {/* CTA */}
@@ -163,14 +162,16 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-foreground/70 hover:text-foreground"
-            aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
-          >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <ViewToggle mobile className="h-fit" />
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="p-2 text-foreground/70 hover:text-foreground"
+              aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </nav>
 
         {/* ─── Apple-style Mega Dropdown ────────────────────────────── */}
@@ -305,8 +306,7 @@ export default function Navbar() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="fixed inset-0 top-16 bg-background/95 backdrop-blur-lg z-40 flex flex-col items-center justify-start gap-8 overflow-auto p-6 md:hidden">
-          <ViewToggle mobile className="w-full max-w-md" />
-          <div className="flex flex-col items-center gap-6 pt-4">
+          <div className="flex flex-col items-center gap-6 pt-4 w-full">
             {navLinks.map((link) => (
               <a
                 key={link.href}
