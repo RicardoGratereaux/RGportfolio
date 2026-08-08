@@ -16,7 +16,7 @@ export default function Contact() {
           ¿Tienes un proyecto en mente o buscas un desarrollador Full Stack para tu equipo? Envíame un mensaje.
         </p>
 
-        <div className="grid md:grid-cols-5 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
           {/* Info Side */}
           <div className="md:col-span-2 space-y-6">
             <a

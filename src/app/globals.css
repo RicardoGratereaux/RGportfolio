@@ -12,6 +12,11 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 /* Dark mode by default (Minimal Charcoal / Onyx) */

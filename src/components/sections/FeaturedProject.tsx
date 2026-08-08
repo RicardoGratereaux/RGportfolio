@@ -41,8 +41,8 @@ export default function FeaturedProject() {
         </h2>
 
         {/* Main Card */}
-        <div className="p-8 md:p-12 rounded-2xl border border-foreground/10 bg-foreground/[0.02] mb-8">
-          <div className="flex flex-col md:flex-row justify-between md:items-start mb-6 gap-4">
+        <div className="p-6 md:p-12 rounded-2xl border border-foreground/10 bg-foreground/[0.02] mb-8">
+          <div className="flex flex-col sm:flex-row justify-between md:items-start mb-6 gap-4">
             <div>
               <span className="text-xs font-mono text-foreground/50 uppercase tracking-wider block mb-2">
                 Ecommerce Platform
@@ -52,17 +52,17 @@ export default function FeaturedProject() {
               </h3>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
               <a
                 href="#"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-foreground/15 text-xs font-mono hover:bg-foreground/10 transition-colors"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-foreground/15 text-xs font-mono hover:bg-foreground/10 transition-colors"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
                 <span>Live Demo</span>
               </a>
               <a
                 href="#"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-foreground text-background text-xs font-mono font-medium hover:opacity-90 transition-opacity"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-foreground text-background text-xs font-mono font-medium hover:opacity-90 transition-opacity"
               >
                 <GitHubIcon className="w-3.5 h-3.5" />
                 <span>Código</span>
@@ -91,7 +91,7 @@ export default function FeaturedProject() {
         </div>
 
         {/* Feature Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {features.map((feat) => (
             <div
               key={feat.label}

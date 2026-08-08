@@ -24,7 +24,7 @@ export default function About() {
         </h2>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-16">
           {stats.map((stat) => (
             <div
               key={stat.label}
@@ -40,7 +40,7 @@ export default function About() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid md:grid-cols-2 gap-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           {/* Approach Card */}
           <div className="p-8 rounded-2xl border border-foreground/10 bg-foreground/[0.02]">
             <h3 className="text-xl font-bold mb-4 text-foreground">
